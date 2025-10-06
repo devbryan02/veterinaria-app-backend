@@ -1,5 +1,7 @@
 package com.app.veterinaria.domain.model;
 
+import java.awt.*;
+import java.util.List;
 import java.util.UUID;
 
 public class Mascota {
@@ -15,13 +17,15 @@ public class Mascota {
     private String color;
     private Dueno dueno;
 
+    private List<Imagen> imagenes;
+
     //constructor vacio
     public Mascota() {}
 
     //constructor lleno
-    public Mascota(String nombre, UUID id, String especie, String raza, String edad, char sexo, String temperamento, String condicionReproductiva, String color, Dueno dueno) {
-        this.nombre = nombre;
+    public Mascota(UUID id, String nombre, String especie, String raza, String edad, char sexo, String temperamento, String condicionReproductiva, String color, Dueno dueno, List<Imagen> imagenes) {
         this.id = id;
+        this.nombre = nombre;
         this.especie = especie;
         this.raza = raza;
         this.edad = edad;
@@ -30,9 +34,9 @@ public class Mascota {
         this.condicionReproductiva = condicionReproductiva;
         this.color = color;
         this.dueno = dueno;
+        this.imagenes = imagenes;
     }
 
-    //metodos get y set
     public UUID getId() {
         return id;
     }
@@ -89,14 +93,6 @@ public class Mascota {
         this.temperamento = temperamento;
     }
 
-    public String getCondicionReproductiva() {
-        return condicionReproductiva;
-    }
-
-    public void setCondicionReproductiva(String condicionReproductiva) {
-        this.condicionReproductiva = condicionReproductiva;
-    }
-
     public String getColor() {
         return color;
     }
@@ -105,11 +101,27 @@ public class Mascota {
         this.color = color;
     }
 
+    public String getCondicionReproductiva() {
+        return condicionReproductiva;
+    }
+
+    public void setCondicionReproductiva(String condicionReproductiva) {
+        this.condicionReproductiva = condicionReproductiva;
+    }
+
     public Dueno getDueno() {
         return dueno;
     }
 
     public void setDueno(Dueno dueno) {
         this.dueno = dueno;
+    }
+
+    public List<Imagen> getImagenes() {
+        return imagenes;
+    }
+
+    public void setImagenes(List<Imagen> imagenes) {
+        this.imagenes = imagenes;
     }
 }

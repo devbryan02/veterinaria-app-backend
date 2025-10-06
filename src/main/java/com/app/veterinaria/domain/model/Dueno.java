@@ -1,5 +1,6 @@
 package com.app.veterinaria.domain.model;
 
+import java.util.List;
 import java.util.UUID;
 
 public class Dueno {
@@ -14,23 +15,25 @@ public class Dueno {
     private Long latitud;
     private Long longitud;
 
+    private List<Mascota> mascotas;
+
     //Constructor vacio
     public Dueno(){}
 
-    //Constructor lleno
-    public Dueno(UUID id, String nombre, String DNI, String direccion, String telefono, String correo, String password_hash, Long latitud, Long longitud) {
+    // constructor lleno
+    public Dueno(UUID id, String nombre, String DNI, String direccion, String telefono, String correo, String passwordHash, Long latitud, Long longitud, List<Mascota> mascotas) {
         this.id = id;
         this.nombre = nombre;
         this.DNI = DNI;
         this.direccion = direccion;
         this.telefono = telefono;
         this.correo = correo;
-        this.passwordHash = password_hash;
+        this.passwordHash = passwordHash;
         this.latitud = latitud;
         this.longitud = longitud;
+        this.mascotas = mascotas;
     }
 
-    //Metodos Get y Set
     public UUID getId() {
         return id;
     }
@@ -47,20 +50,20 @@ public class Dueno {
         this.nombre = nombre;
     }
 
-    public String getDireccion() {
-        return direccion;
-    }
-
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
-
     public String getDNI() {
         return DNI;
     }
 
     public void setDNI(String DNI) {
         this.DNI = DNI;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 
     public String getTelefono() {
@@ -71,20 +74,20 @@ public class Dueno {
         this.telefono = telefono;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
-    }
-
     public String getCorreo() {
         return correo;
     }
 
     public void setCorreo(String correo) {
         this.correo = correo;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
     public Long getLatitud() {
@@ -101,5 +104,13 @@ public class Dueno {
 
     public void setLongitud(Long longitud) {
         this.longitud = longitud;
+    }
+
+    public List<Mascota> getMascotas() {
+        return mascotas;
+    }
+
+    public void setMascotas(List<Mascota> mascotas) {
+        this.mascotas = mascotas;
     }
 }
