@@ -1,4 +1,6 @@
 spring:
+  webflux:
+    base-path: /api/v1
   application:
     name: veterinaria-app
 
