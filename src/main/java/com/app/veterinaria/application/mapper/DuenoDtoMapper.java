@@ -1,16 +1,16 @@
 package com.app.veterinaria.application.mapper;
 
-import com.app.veterinaria.domain.model.Admin;
-import com.app.veterinaria.infrastructure.web.dto.request.AdminNewRequest;
+import com.app.veterinaria.domain.model.Dueno;
+import com.app.veterinaria.infrastructure.web.dto.request.DuenoNewRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
-public interface AdminDtoMapper {
+public interface DuenoDtoMapper {
 
     @Mapping(target = "passwordHash", source = "password")
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "rol", ignore = true)
-    Admin toDomain(AdminNewRequest request);
+    @Mapping(target = "mascotas", ignore = true)
+    Dueno toDomain(DuenoNewRequest request);
 
 }

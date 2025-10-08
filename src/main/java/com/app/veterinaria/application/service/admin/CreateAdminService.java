@@ -9,7 +9,7 @@ import com.app.veterinaria.infrastructure.web.dto.response.OperationResponseStat
 import com.app.veterinaria.shared.exception.admin.AdminCreateException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -24,7 +24,7 @@ public class CreateAdminService {
     public Mono<OperationResponseStatus> execute(AdminNewRequest request){
         return Mono.fromCallable(() -> {
             Admin admin = adminDtoMapper.toDomain(request);
-            admin.setPasswordHash(encriptPassword(admin.getPasswordHash()));
+            admin.setPasswordHash(admin.getPasswordHash());
             admin.setRol(asignarRol());
             return admin;
         })
@@ -40,11 +40,11 @@ public class CreateAdminService {
                 .flatMap(existing -> Mono.<Admin>error(new AdminCreateException("El email ya esta registrado")))
                 .switchIfEmpty(adminRepository.save(admin));
     }
-
-    // contraseña en texo plano a encriptada
-    private String encriptPassword(String password){
-        return new BCryptPasswordEncoder().encode(password);
-    }
+//
+//     contraseña en texo plano a encriptada
+//    private String encriptPassword(String password){
+//        return new BCryptPasswordEncoder().encode(password);
+//    }
 
     //metodo auxiliar para asignar el rol de administrador - veterinaria por defecto
     private RolAdmin asignarRol(){return RolAdmin.VETERINARIA;}

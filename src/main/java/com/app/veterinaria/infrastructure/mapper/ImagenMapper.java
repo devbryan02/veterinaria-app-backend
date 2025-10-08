@@ -3,14 +3,13 @@ package com.app.veterinaria.infrastructure.mapper;
 import com.app.veterinaria.domain.model.Imagen;
 import com.app.veterinaria.domain.model.Mascota;
 import com.app.veterinaria.infrastructure.persistence.entity.ImagenEntity;
+import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 import java.util.UUID;
 
+@Mapper(componentModel = "spring")
 public interface ImagenMapper {
-
-    ImagenMapper INSTANCE = Mappers.getMapper(ImagenMapper.class);
 
     @Mapping(target = "mascota", expression = "java(toMascota(entity.getMascotaId()))")
     Imagen toDomain(ImagenEntity entity);

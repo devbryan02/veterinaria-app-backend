@@ -5,17 +5,14 @@ import com.app.veterinaria.domain.model.Mascota;
 import com.app.veterinaria.infrastructure.persistence.entity.MascotaEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 import java.util.UUID;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface MascotaMapper {
 
-    MascotaMapper INSTANCE = Mappers.getMapper(MascotaMapper.class);
-
     @Mapping(target = "dueno", expression = "java(toDueno(entity.getDuenoId()))")
-    @Mapping(target = "imagenes", expression = "java(Collecctions.emptyList())")
+    @Mapping(target = "imagenes", expression = "java(java.util.Collections.emptyList())")
     Mascota toDomain(MascotaEntity entity);
 
     @Mapping(target = "duenoId", source = "dueno.id")

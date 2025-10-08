@@ -34,3 +34,4 @@ build/
 
 #app config variables
 /src/main/resources/application.properties
+/src/main/resources/application.yml

@@ -8,15 +8,11 @@ import com.app.veterinaria.infrastructure.persistence.entity.AnalisisSaludEntity
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 import java.util.UUID;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface AnalisisSaludMapper {
-
-    // Instancia única del mapper que MapStruct genera automáticamente
-    AnalisisSaludMapper INSTANCE = Mappers.getMapper(AnalisisSaludMapper.class);
 
     // ----------------------
     // Entity -> Domain

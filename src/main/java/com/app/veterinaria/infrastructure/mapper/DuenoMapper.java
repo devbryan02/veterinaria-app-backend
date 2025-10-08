@@ -4,14 +4,11 @@ import com.app.veterinaria.domain.model.Dueno;
 import com.app.veterinaria.infrastructure.persistence.entity.DuenoEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface DuenoMapper {
 
-    DuenoMapper INSTANCE = Mappers.getMapper(DuenoMapper.class);
-
-    @Mapping(target = "mascotas", expression = "java(Collecctions.emptyList())")
+    @Mapping(target = "mascotas", expression = "java(java.util.Collections.emptyList())")
     Dueno toDomain (DuenoEntity entity);
 
     DuenoEntity toEntity(Dueno domain);

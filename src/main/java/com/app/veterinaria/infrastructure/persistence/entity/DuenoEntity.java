@@ -27,7 +27,7 @@ public class DuenoEntity {
     private String correo;
     @Column("password_hash")
     private String passwordHash;
-    private Long latitud;
-    private Long longitud;
+    private String latitud;
+    private String longitud;
 
 }

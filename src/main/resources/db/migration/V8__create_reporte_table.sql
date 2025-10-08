@@ -1,6 +1,6 @@
 CREATE TABLE reporte
 (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     fecha DATE NOT NULL,
     descripcion VARCHAR(255),
     data JSON,

@@ -1,6 +1,6 @@
 CREATE TABLE imagen
 (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     url VARCHAR(255) NOT NULL,
     fecha_subida DATE,
     descripcion VARCHAR(255),

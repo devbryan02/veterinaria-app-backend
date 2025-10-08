@@ -1,6 +1,6 @@
 CREATE TABLE mascota
 (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     nombre VARCHAR(255) NOT NULL,
     especie VARCHAR(255) NOT NULL,
     raza VARCHAR(255),

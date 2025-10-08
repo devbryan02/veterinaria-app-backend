@@ -1,6 +1,6 @@
 CREATE TABLE vacuna
 (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     tipo VARCHAR(255) NOT NULL,
     fecha_aplicacion DATE,
     mascota_id UUID NOT NULL,

@@ -5,14 +5,11 @@ import com.app.veterinaria.domain.model.Vacuna;
 import com.app.veterinaria.infrastructure.persistence.entity.VacunaEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 import java.util.UUID;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface VacunaMapper {
-
-    VacunaMapper INSTANCE = Mappers.getMapper(VacunaMapper.class);
 
     @Mapping(target = "mascota", expression = "java(toMascota(entity.getMascotaId()))")
     Vacuna toDomain(VacunaEntity entity);

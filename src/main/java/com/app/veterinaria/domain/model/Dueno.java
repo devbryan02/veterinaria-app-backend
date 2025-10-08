@@ -12,8 +12,8 @@ public class Dueno {
     private String telefono;
     private String correo;
     private String passwordHash;
-    private Long latitud;
-    private Long longitud;
+    private String latitud;
+    private String longitud;
 
     private List<Mascota> mascotas;
 
@@ -21,7 +21,7 @@ public class Dueno {
     public Dueno(){}
 
     // constructor lleno
-    public Dueno(UUID id, String nombre, String DNI, String direccion, String telefono, String correo, String passwordHash, Long latitud, Long longitud, List<Mascota> mascotas) {
+    public Dueno(UUID id, String nombre, String DNI, String direccion, String telefono, String correo, String passwordHash, String latitud, String longitud, List<Mascota> mascotas) {
         this.id = id;
         this.nombre = nombre;
         this.DNI = DNI;
@@ -90,19 +90,19 @@ public class Dueno {
         this.passwordHash = passwordHash;
     }
 
-    public Long getLatitud() {
+    public String getLatitud() {
         return latitud;
     }
 
-    public void setLatitud(Long latitud) {
+    public void setLatitud(String latitud) {
         this.latitud = latitud;
     }
 
-    public Long getLongitud() {
+    public String getLongitud() {
         return longitud;
     }
 
-    public void setLongitud(Long longitud) {
+    public void setLongitud(String longitud) {
         this.longitud = longitud;
     }
 

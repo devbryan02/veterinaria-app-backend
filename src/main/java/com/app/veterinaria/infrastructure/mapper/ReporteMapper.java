@@ -7,14 +7,11 @@ import com.app.veterinaria.infrastructure.persistence.entity.ReporteEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 import java.util.UUID;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface ReporteMapper {
-
-    MascotaMapper INSTANCE = Mappers.getMapper(MascotaMapper.class);
 
     @Mapping(target = "admin", expression = "java(toAdmin(entity.getAdminId()))")
     Reporte toDomain(ReporteEntity entity);
