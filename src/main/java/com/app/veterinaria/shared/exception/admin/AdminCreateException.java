@@ -1,12 +1,11 @@
 package com.app.veterinaria.shared.exception.admin;
 
-public class AdminCreateException extends RuntimeException {
+import com.app.veterinaria.shared.exception.BusinessException;
+import org.springframework.http.HttpStatus;
+
+public class AdminCreateException extends BusinessException {
 
     public AdminCreateException(String message) {
-        super(message);
-    }
-
-    public AdminCreateException(String message, Throwable cause) {
-        super(message, cause);
+        super(message, HttpStatus.BAD_REQUEST);
     }
 }

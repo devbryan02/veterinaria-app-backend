@@ -1,12 +1,11 @@
 package com.app.veterinaria.shared.exception.dueno;
 
-public class DuenoCreateException extends RuntimeException
-{
-    public DuenoCreateException(String message) {
-        super(message);
-    }
+import com.app.veterinaria.shared.exception.BusinessException;
+import org.springframework.http.HttpStatus;
 
-    public DuenoCreateException(String message, Throwable cause) {
-        super(message, cause);
+public class DuenoCreateException extends BusinessException {
+
+    public DuenoCreateException(String message) {
+        super(message, HttpStatus.BAD_REQUEST);
     }
 }
