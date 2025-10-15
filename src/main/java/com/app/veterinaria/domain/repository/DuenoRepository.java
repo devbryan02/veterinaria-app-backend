@@ -5,6 +5,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface DuenoRepository {
 
@@ -13,5 +14,7 @@ public interface DuenoRepository {
     Mono<Boolean> existsByCorreo(String correo);
     Mono<Boolean> existsByTelefono(String telefono);
     Mono<Boolean> existsByDNI(String DNI);
+    Mono<Boolean> existsById(UUID id);
+    Mono<Dueno> findById(UUID id);
 
 }

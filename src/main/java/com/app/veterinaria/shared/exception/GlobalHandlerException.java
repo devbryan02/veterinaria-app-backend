@@ -1,6 +1,8 @@
 package com.app.veterinaria.shared.exception;
 
 import com.app.veterinaria.infrastructure.web.dto.response.ApiErrorResponse;
+import io.r2dbc.spi.R2dbcDataIntegrityViolationException;
+import io.r2dbc.spi.R2dbcException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -81,6 +83,43 @@ public class GlobalHandlerException {
                 .build();
 
         return Mono.just(ResponseEntity.badRequest().body(apiErrorResponse));
+    }
+
+    //handler para errores de R2DBC
+    @ExceptionHandler(R2dbcDataIntegrityViolationException.class)
+    public Mono<ResponseEntity<ApiErrorResponse>> handleDataIntegrityViolation(
+            R2dbcDataIntegrityViolationException ex,
+            ServerWebExchange exchange) {
+
+        log.error("Error de integridad de datos: {}", ex.getMessage());
+
+        ApiErrorResponse apiErrorResponse = ApiErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.CONFLICT.value())
+                .error("DataIntegrityViolation")
+                .message("Ya existe una mascota con esos datos")
+                .path(exchange.getRequest().getURI().getPath())
+                .build();
+
+        return Mono.just(ResponseEntity.status(HttpStatus.CONFLICT).body(apiErrorResponse));
+    }
+
+    @ExceptionHandler(R2dbcException.class)
+    public Mono<ResponseEntity<ApiErrorResponse>> handleR2dbcException(
+            R2dbcException ex,
+            ServerWebExchange exchange) {
+
+        log.error("Error de base de datos: {}", ex.getMessage());
+
+        ApiErrorResponse apiErrorResponse = ApiErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .error("DatabaseError")
+                .message("Error al procesar la operación en la base de datos")
+                .path(exchange.getRequest().getURI().getPath())
+                .build();
+
+        return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiErrorResponse));
     }
 
     // Catch-all para cualquier excepción no manejada

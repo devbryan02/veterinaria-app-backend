@@ -23,7 +23,7 @@ public class MascotaEntity {
     private String especie;
     private String raza;
     private String edad;
-    private char sexo;
+    private String sexo;
     private String temperamento;
     @Column("condicion_reproductiva")
     private String condicionReproductiva;

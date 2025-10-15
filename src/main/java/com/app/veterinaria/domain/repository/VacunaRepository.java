@@ -1,12 +1,12 @@
 package com.app.veterinaria.domain.repository;
 
 import com.app.veterinaria.domain.model.Vacuna;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface VacunaRepository {
 
-    Vacuna save(Vacuna vacuna);
-    List<Vacuna> findAll();
+    Mono<Vacuna> save(Vacuna vacuna);
+    Flux<Vacuna> findAll();
 
 }
