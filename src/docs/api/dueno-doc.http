@@ -1,0 +1,13 @@
+POST http://localhost:8080/api/v1/dueno
+Content-Type: application/json
+
+{
+  "nombre": "pedrolopez",
+  "DNI": "76253467",
+  "direccion": "av san lorenzo",
+  "telefono": "982353789",
+  "correo": "pedro@elp.edu.pe",
+  "password": "1236478920nG*",
+  "latitud": "no",
+  "longitud": "si"
+}

@@ -1,12 +1,12 @@
 package com.app.veterinaria.domain.repository;
 
 import com.app.veterinaria.domain.model.Imagen;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface ImagenRepository {
 
-    Imagen save(Imagen imagen);
-    List<Imagen> findAll();
+    Mono<Imagen> save(Imagen imagen);
+    Flux<Imagen> findAll();
 
 }

@@ -6,7 +6,6 @@ import com.app.veterinaria.domain.repository.VacunaRepository;
 import com.app.veterinaria.infrastructure.web.dto.request.VacunaNewRequest;
 import com.app.veterinaria.infrastructure.web.dto.response.OperationResponseStatus;
 import com.app.veterinaria.shared.exception.mascota.MascotaNotFoundException;
-import com.app.veterinaria.shared.exception.vacuna.VacunaCreateException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
