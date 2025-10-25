@@ -2,7 +2,7 @@ package com.app.veterinaria.infrastructure.web.dto.details;
 
 import java.util.UUID;
 
-public record MascotaDetails(
+public record MascotaWithDuenoDetails(
         UUID id,
         String nombre,
         String especie,

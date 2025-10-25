@@ -4,20 +4,43 @@ POST http://localhost:8080/api/v1/mascota
 Content-Type: application/json
 
 {
-  "nombre": "percy xd",
-  "especie": "humano",
-  "raza": "kabrito",
-  "edad": "25",
+  "nombre": "luna",
+  "especie": "perro",
+  "raza": "chuzco",
+  "edad": "12",
   "sexo": "Hembra",
-  "temperamento": "Masoquista",
-  "condicionReproductiva": "Sin huevitos",
+  "temperamento": "Jugueton",
+  "condicionReproductiva": "Entero",
   "color": "marron",
   "duenoId": "2031a40b-8829-439e-9e59-80d51d7c5abe"
 }
 
 ###
+#Listar mascotas
 GET http://localhost:8080/api/v1/mascota
+
+###
+#Eliminar una mascota por ID
+DELETE http://localhost:8080/api/v1/mascota/d3609366-715e-4806-b6e9-9c7fb7c08221
+
+###
+#Mostrar una mascota por su Id
+GET http://localhost:8080/api/v1/mascota/c3aebfa8-ead3-4a96-a0f4-812ccb20bb30
+
+###
+#Actualiza una mascota por su ID
+PATCH http://localhost:8080/api/v1/mascota/c3aebfa8-ead3-4a96-a0f4-812ccb20bb30
 Content-Type: application/json
 
-
+{
+  "nombre": "Merlina",
+  "especie": "perro",
+  "raza": "chuzco",
+  "edad": "12",
+  "sexo": "Hembra",
+  "temperamento": "Jugueton",
+  "condicionReproductiva": "Entero",
+  "color": "marron",
+  "dueno": "Brayan Cardenas"
+}
 

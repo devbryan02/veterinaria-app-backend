@@ -6,6 +6,7 @@ import com.app.veterinaria.infrastructure.mapper.MascotaMapper;
 import com.app.veterinaria.infrastructure.persistence.entity.MascotaEntity;
 import com.app.veterinaria.infrastructure.persistence.jpa.MascotaJpaRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -13,6 +14,7 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 @Repository
+@Slf4j
 @RequiredArgsConstructor
 public class MascotaRepositoryImpl implements MascotaRepository {
 
@@ -27,11 +29,28 @@ public class MascotaRepositoryImpl implements MascotaRepository {
 
     @Override
     public Flux<Mascota> findAll() {
-        return mascotaJpaRepository.findAll().map(mascotaMapper::toDomain);
+        return mascotaJpaRepository.findAll()
+                .map(mascotaMapper::toDomain)
+                .doOnNext(mascota -> log.info("Mascota: {}", mascota));
     }
 
     @Override
     public Mono<Boolean> existsById(UUID mascotaId) {
         return mascotaJpaRepository.existsById(mascotaId);
+    }
+
+    @Override
+    public Mono<Void> deleteById(UUID mascotaId) {
+        return mascotaJpaRepository.deleteById(mascotaId);
+    }
+
+    @Override
+    public Mono<Void> update(Mascota mascota) {
+        return mascotaJpaRepository.save(mascotaMapper.toEntity(mascota)).then();
+    }
+
+    @Override
+    public Mono<Mascota> findById(UUID mascotaId) {
+        return mascotaJpaRepository.findById(mascotaId).map(mascotaMapper::toDomain);
     }
 }

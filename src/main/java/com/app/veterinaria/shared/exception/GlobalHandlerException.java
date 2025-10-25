@@ -4,6 +4,7 @@ import com.app.veterinaria.infrastructure.web.dto.response.ApiErrorResponse;
 import io.r2dbc.spi.R2dbcDataIntegrityViolationException;
 import io.r2dbc.spi.R2dbcException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -121,6 +122,34 @@ public class GlobalHandlerException {
 
         return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiErrorResponse));
     }
+
+    //Captura errores de contrainst nullos, unique, fk
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public Mono<ResponseEntity<ApiErrorResponse>> handleSpringDataIntegrityViolation(
+            DataIntegrityViolationException ex,
+            ServerWebExchange exchange) {
+
+        log.error("Error de integridad de datos (Spring DAO): {}", ex.getMessage());
+
+        String message = "Violación de integridad de datos.";
+        // Puedes hacer un chequeo del mensaje para personalizar la respuesta:
+        if (ex.getMessage() != null && ex.getMessage().contains("violates not-null constraint")) {
+            message = "Uno o más campos requeridos no pueden ser nulos.";
+        } else if (ex.getMessage() != null && ex.getMessage().contains("duplicate key")) {
+            message = "Registro duplicado: ya existe un recurso con esos datos.";
+        }
+
+        ApiErrorResponse apiErrorResponse = ApiErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.CONFLICT.value())
+                .error("DataIntegrityViolation")
+                .message(message)
+                .path(exchange.getRequest().getURI().getPath())
+                .build();
+
+        return Mono.just(ResponseEntity.status(HttpStatus.CONFLICT).body(apiErrorResponse));
+    }
+
 
     // Catch-all para cualquier excepción no manejada
     @ExceptionHandler(Exception.class)

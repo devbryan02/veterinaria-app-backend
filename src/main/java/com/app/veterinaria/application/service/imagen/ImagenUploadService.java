@@ -54,13 +54,9 @@ public class ImagenUploadService {
                 ? Objects.requireNonNull(filePart.headers().getContentType()).toString().toLowerCase()
                 : null;
 
-        if (filename.isBlank()) {
-            return Mono.error(new IllegalArgumentException("El archivo debe tener un nombre válido"));
-        }
+        if (filename.isBlank()) return Mono.error(new IllegalArgumentException("El archivo debe tener un nombre válido"));
 
-        if (contentType == null || !ALLOWED_TYPES.contains(contentType)) {
-            return Mono.error(new IllegalArgumentException("Tipo de archivo no permitido. Solo JPEG, PNG, JPG o WEBP"));
-        }
+        if (contentType == null || !ALLOWED_TYPES.contains(contentType)) return Mono.error(new IllegalArgumentException("Tipo de archivo no permitido. Solo JPEG, PNG, JPG o WEBP"));
 
         log.info("Archivo validado: {} [{}]", filename, contentType);
         return Mono.just(filePart);

@@ -31,3 +31,5 @@ public record MascotaNewRequest(
         @NotBlank(message = "El id del dueño es obligatorio")
         String duenoId
 ) { }
+
+
