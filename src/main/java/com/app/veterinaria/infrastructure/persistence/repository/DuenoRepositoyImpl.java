@@ -54,4 +54,14 @@ public class DuenoRepositoyImpl implements DuenoRepository {
     public Mono<Dueno> findById(UUID id) {
         return duenoJpaRepository.findById(id).map(duenoMapper::toDomain);
     }
+
+    @Override
+    public Mono<Void> deleteById(UUID id) {
+        return duenoJpaRepository.deleteById(id);
+    }
+
+    @Override
+    public Mono<Void> update(Dueno dueno) {
+        return duenoJpaRepository.save(duenoMapper.toEntity(dueno)).then();
+    }
 }

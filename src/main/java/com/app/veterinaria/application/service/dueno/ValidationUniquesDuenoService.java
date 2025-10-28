@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class ValidationDuenoService {
+public class ValidationUniquesDuenoService {
 
     private final DuenoRepository duenoRepository;
 

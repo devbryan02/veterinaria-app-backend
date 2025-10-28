@@ -1,13 +1,75 @@
-POST http://localhost:8080/api/v1/dueno
+### API de Dueños
+# Archivo de pruebas HTTP para los endpoints del recurso "Dueño"
+# Base URL del servidor local
+@baseUrl = http://localhost:8080/api/v1/dueno
+
+############################################################
+### Crear un nuevo dueño
+# Crea un nuevo registro de dueño (propietario de mascota).
+# - Metodo: POST
+# - Endpoint: {{baseUrl}}
+# - Body: JSON con los datos personales y de contacto del dueño
+# - Campos obligatorios:
+#   - nombre, DNI, direccion, telefono, correo, password
+# - Campos opcionales:
+#   - latitud, longitud (pueden representar coordenadas geográficas)
+############################################################
+POST {{baseUrl}}
 Content-Type: application/json
 
 {
-  "nombre": "pedrolopez",
+  "nombre": "Pedro López",
   "DNI": "76253467",
-  "direccion": "av san lorenzo",
+  "direccion": "Av. San Lorenzo",
   "telefono": "982353789",
   "correo": "pedro@elp.edu.pe",
   "password": "1236478920nG*",
   "latitud": "no",
   "longitud": "si"
 }
+
+############################################################
+### Obtener un dueño por ID
+# Muestra la información detallada de un dueño específico.
+# - Metodo: GET
+# - Endpoint: {{baseUrl}}/{id}
+# - Parámetro: id (UUID)
+############################################################
+GET {{baseUrl}}/2031a40b-8829-439e-9e59-80d51d7c5abe
+
+############################################################
+### Listar todos los dueños
+# Devuelve la lista completa de dueños registrados en el sistema.
+# - Metodo: GET
+# - Endpoint: {{baseUrl}}
+############################################################
+GET {{baseUrl}}
+
+############################################################
+### Actualizar información de un dueño
+# Actualiza los datos de un dueño existente.
+# - Metodo: PATCH
+# - Endpoint: {{baseUrl}}/{id}
+# - Campos modificables: nombre, DNI, direccion, telefono, correo, password, latitud, longitud
+############################################################
+PATCH {{baseUrl}}/2031a40b-8829-439e-9e59-80d51d7c5abe
+Content-Type: application/json
+
+{
+  "nombre": "Brayan Cardenas Muñoz",
+  "DNI": "77296138",
+  "direccion": "Av. San Lorenzo",
+  "telefono": "992450988",
+  "correo": "brayan7br7@gmail.com",
+  "password": "pastuso2002ELP*",
+  "latitud": "si",
+  "longitud": "si"
+}
+
+############################################################
+### Eliminar un dueño
+# Elimina permanentemente un registro de dueño según su ID.
+# - Metodo: DELETE
+# - Endpoint: {{baseUrl}}/{id}
+############################################################
+DELETE {{baseUrl}}/2031a40b-8829-439e-9e59-80d51d7c5abe

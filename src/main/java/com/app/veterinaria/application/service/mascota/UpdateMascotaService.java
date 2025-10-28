@@ -24,9 +24,7 @@ public class UpdateMascotaService {
     public Mono<OperationResponseStatus> execute(MascotaUpdateRequest mascotaNueva, UUID mascotaId){
         return validateExistsMascota(mascotaId)
                 .then(mascotaRepository.findById(mascotaId))
-                .doOnNext(existente ->
-                        mascotaDtoMapper.updateMascotaFromRequest(mascotaNueva, existente)
-                )
+                .doOnNext(existente -> mascotaDtoMapper.updateMascotaFromRequest(mascotaNueva, existente))
                 .flatMap(mascotaRepository::update)
                 .then(Mono.fromCallable(() -> {
                     log.info("Mascota con id [{}] actualizado.", mascotaId);

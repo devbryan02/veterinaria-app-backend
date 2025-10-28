@@ -16,5 +16,7 @@ public interface DuenoRepository {
     Mono<Boolean> existsByDNI(String DNI);
     Mono<Boolean> existsById(UUID id);
     Mono<Dueno> findById(UUID id);
+    Mono<Void> deleteById(UUID id);
+    Mono<Void> update(Dueno dueno);
 
 }

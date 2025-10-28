@@ -5,7 +5,6 @@ import lombok.ToString;
 import java.util.List;
 import java.util.UUID;
 
-@ToString
 public class Mascota {
 
     private UUID id;

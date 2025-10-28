@@ -29,9 +29,7 @@ public class MascotaRepositoryImpl implements MascotaRepository {
 
     @Override
     public Flux<Mascota> findAll() {
-        return mascotaJpaRepository.findAll()
-                .map(mascotaMapper::toDomain)
-                .doOnNext(mascota -> log.info("Mascota: {}", mascota));
+        return mascotaJpaRepository.findAll().map(mascotaMapper::toDomain);
     }
 
     @Override
@@ -52,5 +50,15 @@ public class MascotaRepositoryImpl implements MascotaRepository {
     @Override
     public Mono<Mascota> findById(UUID mascotaId) {
         return mascotaJpaRepository.findById(mascotaId).map(mascotaMapper::toDomain);
+    }
+
+    @Override
+    public Flux<Mascota> findByDuenoId(UUID duenoId) {
+        return mascotaJpaRepository.findByDuenoId(duenoId).map(mascotaMapper::toDomain);
+    }
+
+    @Override
+    public Mono<Boolean> existsByDuenoId(UUID duenoId) {
+        return mascotaJpaRepository.existsByDuenoId(duenoId);
     }
 }
