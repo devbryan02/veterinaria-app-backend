@@ -29,6 +29,7 @@ public interface DuenoDtoMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "mascotas", ignore = true)
+    @Mapping(target = "passwordHash", source = "password")
     void updateDuenoFromRequest(DuenoUpdateRequest request, @MappingTarget Dueno dueno);
 
 }

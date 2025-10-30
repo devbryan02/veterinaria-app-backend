@@ -24,6 +24,7 @@ public class DuenoController {
     private final ListDuenoService listDuenoService;
     private final DeleteDuenoService deleteDuenoService;
     private final UpdateDuenoService updateDuenoService;
+    private final SearchDuenoService searchDuenoService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -53,5 +54,11 @@ public class DuenoController {
     @ResponseStatus(HttpStatus.OK)
     public Mono<OperationResponseStatus> updateDueno(@RequestBody DuenoUpdateRequest request,  @PathVariable UUID duenoId) {
         return  updateDuenoService.execute(request,duenoId);
+    }
+
+    @GetMapping("/search")
+    @ResponseStatus(HttpStatus.OK)
+    public Flux<DuenoDetails> searchDueno(@RequestParam String term) {
+        return searchDuenoService.execute(term);
     }
 }

@@ -12,25 +12,25 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
-public class ListDuenoService {
+@RequiredArgsConstructor
+public class SearchDuenoService {
 
     private final DuenoRepository duenoRepository;
-    private final DuenoDtoMapper duenoDtoMapper;
     private final MascotaRepository mascotaRepository;
+    private final DuenoDtoMapper duenoDtoMapper;
 
-    public Flux<DuenoDetails> execute(){
-        return duenoRepository.findAll()
+    public Flux<DuenoDetails> execute(String searchTerm) {
+        return duenoRepository.search(searchTerm)
                 .flatMap(dueno ->
                         mascotaRepository.findByDuenoId(dueno.getId())
                                 .collectList()
                                 .switchIfEmpty(Mono.error(new MascotaNotFoundException("No se encontraron mascotas registradas")))
                                 .doOnNext(mascotas -> log.info("Se encontraron {} mascota(s) para el dueño {}", mascotas.size(), dueno.getNombre()))
-                                .map(mascotas ->{
+                                .map(mascotas -> {
                                     dueno.setMascotas(mascotas);
                                     return duenoDtoMapper.toDetails(dueno);
                                 })
-                );
+                        );
     }
 }

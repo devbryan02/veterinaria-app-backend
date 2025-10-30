@@ -73,3 +73,11 @@ Content-Type: application/json
 # - Endpoint: {{baseUrl}}/{id}
 ############################################################
 DELETE {{baseUrl}}/2031a40b-8829-439e-9e59-80d51d7c5abe
+
+############################################################
+### Buscar dueño
+# Buscar uun dueño por palabras(DNI, nombre)
+# - Metodo: GET
+# - Endpoint: {{baseUrl}}/?seachTerm=value
+############################################################
+GET {{baseUrl}}/search?term=77296138

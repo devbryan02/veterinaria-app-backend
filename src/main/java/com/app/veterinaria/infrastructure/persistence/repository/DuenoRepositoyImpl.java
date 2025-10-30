@@ -64,4 +64,9 @@ public class DuenoRepositoyImpl implements DuenoRepository {
     public Mono<Void> update(Dueno dueno) {
         return duenoJpaRepository.save(duenoMapper.toEntity(dueno)).then();
     }
+
+    @Override
+    public Flux<Dueno> search(String term) {
+        return duenoJpaRepository.search(term).map(duenoMapper::toDomain);
+    }
 }
