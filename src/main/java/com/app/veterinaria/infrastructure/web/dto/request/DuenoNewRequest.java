@@ -37,10 +37,8 @@ public record DuenoNewRequest(
 
         @NotBlank(message = "La contraseña es obligatoria")
         @Size(min = 8, max = 50, message = "La contraseña debe tener entre 8 y 50 caracteres")
-        @Pattern(
-                regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
-                message = "La contraseña debe contener al menos: 1 mayúscula, 1 minúscula, 1 número y 1 carácter especial"
-        )
+
+        @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres")
         String password,
 
         @NotNull(message = "La latitud es obligatoria")

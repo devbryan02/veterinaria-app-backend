@@ -9,3 +9,16 @@ Content-Type: application/json
   "correo": "luis@gmail.com",
   "password": "Luis20*hola"
 }
+
+###
+PATCH localhost:8080/api/v1/admin/dueno/2031a40b-8829-439e-9e59-80d51d7c5abe
+Content-Type: application/json
+
+{
+  "nombre": "Brayan Cardenas Muñoz",
+  "DNI": "78296138",
+  "direccion": "Av. San lorenzo",
+  "telefono": "992450988",
+  "correo": "brayan7br7@gmail.com"
+}
+
