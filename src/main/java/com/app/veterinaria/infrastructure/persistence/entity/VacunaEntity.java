@@ -22,7 +22,16 @@ public class VacunaEntity {
     private UUID id;
     private String tipo;
     private LocalDate fechaAplicacion;
+
     @Column("mascota_id")
     private UUID mascotaId;
 
+    @Column("meses_vigencia")
+    private Integer mesesVigencia = 12; // Default 12 meses
+
+    @Column("fecha_vencimiento")
+    private LocalDate fechaVencimiento;
+
+    @Column("proxima_dosis")
+    private LocalDate proximaDosis;
 }

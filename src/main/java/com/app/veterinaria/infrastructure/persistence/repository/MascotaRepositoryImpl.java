@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -28,8 +29,8 @@ public class MascotaRepositoryImpl implements MascotaRepository {
     }
 
     @Override
-    public Flux<Mascota> findAll() {
-        return mascotaJpaRepository.findAll().map(mascotaMapper::toDomain);
+    public Flux<Mascota> findAll(int limit) {
+        return mascotaJpaRepository.findAllWithLimit(limit).map(mascotaMapper::toDomain);
     }
 
     @Override
@@ -60,5 +61,10 @@ public class MascotaRepositoryImpl implements MascotaRepository {
     @Override
     public Mono<Boolean> existsByDuenoId(UUID duenoId) {
         return mascotaJpaRepository.existsByDuenoId(duenoId);
+    }
+
+    @Override
+    public Flux<Mascota> findByDuenoIdIn(List<UUID> duenoIds) {
+        return mascotaJpaRepository.findByDuenoIdIn(duenoIds).map(mascotaMapper::toDomain);
     }
 }

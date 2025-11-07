@@ -2,7 +2,6 @@ package com.app.veterinaria.application.mapper;
 
 import com.app.veterinaria.domain.model.Dueno;
 import com.app.veterinaria.domain.model.Mascota;
-import com.app.veterinaria.infrastructure.web.dto.details.MascotaWithDuenoDetails;
 import com.app.veterinaria.infrastructure.web.dto.request.MascotaNewRequest;
 import com.app.veterinaria.infrastructure.web.dto.request.MascotaUpdateRequest;
 import org.mapstruct.Mapper;
@@ -28,9 +27,6 @@ public interface MascotaDtoMapper {
         dueno.setId(UUID.fromString(duenoId));
         return dueno;
     }
-
-    @Mapping(target = "dueno", source = "dueno.nombre")
-    MascotaWithDuenoDetails toDetails(Mascota domain);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "dueno", ignore = true)

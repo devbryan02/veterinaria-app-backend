@@ -1,7 +1,5 @@
 package com.app.veterinaria.domain.model;
 
-import lombok.ToString;
-
 import java.util.List;
 import java.util.UUID;
 

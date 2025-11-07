@@ -14,11 +14,17 @@ public interface DuenoJpaRepository extends ReactiveCrudRepository<DuenoEntity, 
     Mono<Boolean> existsByDNI(String DNI);
     Mono<Boolean> existsByCorreo(String correo);
     Mono<Boolean> existsByTelefono(String telefono);
+
     @Query("""
     SELECT * FROM dueno
     WHERE LOWER(nombre) LIKE LOWER(CONCAT('%', :searchTerm, '%'))
        OR LOWER(DNI) LIKE LOWER(CONCAT('%', :searchTerm, '%'))
+    ORDER BY nombre
+    LIMIT :limit
     """)
-    Flux<DuenoEntity> search(@Param("searchTerm") String searchTerm);
+    Flux<DuenoEntity> search(@Param("searchTerm") String searchTerm, @Param("limit") int limit);
+
+    @Query("SELECT * FROM dueno ORDER BY nombre LIMIT :limit")
+    Flux<DuenoEntity> findAllWithLimit(@Param("limit") int limit);
 
 }

@@ -24,8 +24,4 @@ public interface VacunaMapper {
         return mascota;
     }
 
-    default UUID toMascotaId(Mascota mascota){
-        return mascota != null ? mascota.getId() : null;
-    }
-
 }

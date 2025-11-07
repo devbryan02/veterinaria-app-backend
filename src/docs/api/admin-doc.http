@@ -15,10 +15,38 @@ PATCH localhost:8080/api/v1/admin/dueno/2031a40b-8829-439e-9e59-80d51d7c5abe
 Content-Type: application/json
 
 {
-  "nombre": "Brayan Cardenas Muñoz",
+  "nombre": "Brayan Cardenas Muñozzz ",
   "DNI": "78296138",
   "direccion": "Av. San lorenzo",
   "telefono": "992450988",
   "correo": "brayan7br7@gmail.com"
 }
 
+
+###
+GET localhost:8080/api/v1/admin/mascota/search?term=
+
+############################################################
+### Crear un nuevo dueño
+# Crea un nuevo registro de dueño (propietario de mascota).
+# - Metodo: POST
+# - Endpoint: {{baseUrl}}
+# - Body: JSON con los datos personales y de contacto del dueño
+# - Campos obligatorios:
+#   - nombre, DNI, direccion, telefono, correo, password
+# - Campos opcionales:
+#   - latitud, longitud (pueden representar coordenadas geográficas)
+############################################################
+POST localhost:8080/api/v1/admin/dueno
+Content-Type: application/json
+
+{
+  "nombre": "Pedro López",
+  "DNI": "78296138",
+  "direccion": "Av. San Lorenzo",
+  "telefono": "982353789",
+  "correo": "pedro@elp.edu.pe",
+  "password": "1236478920nG*",
+  "latitud": "no",
+  "longitud": "si"
+}

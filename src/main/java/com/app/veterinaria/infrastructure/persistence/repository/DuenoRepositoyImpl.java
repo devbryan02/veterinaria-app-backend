@@ -26,8 +26,8 @@ public class DuenoRepositoyImpl implements DuenoRepository {
     }
 
     @Override
-    public Flux<Dueno> findAll() {
-        return duenoJpaRepository.findAll().map(duenoMapper::toDomain);
+    public Flux<Dueno> findAll(int limit) {
+        return duenoJpaRepository.findAllWithLimit(limit).map(duenoMapper::toDomain);
     }
 
     @Override
@@ -66,7 +66,8 @@ public class DuenoRepositoyImpl implements DuenoRepository {
     }
 
     @Override
-    public Flux<Dueno> search(String term) {
-        return duenoJpaRepository.search(term).map(duenoMapper::toDomain);
+    public Flux<Dueno> search(String term, int limit) {
+        return duenoJpaRepository.search(term, limit).map(duenoMapper::toDomain);
     }
+
 }

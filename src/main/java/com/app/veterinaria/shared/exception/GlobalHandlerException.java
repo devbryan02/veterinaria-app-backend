@@ -4,6 +4,7 @@ import com.app.veterinaria.infrastructure.web.dto.response.ApiErrorResponse;
 import io.r2dbc.spi.R2dbcDataIntegrityViolationException;
 import io.r2dbc.spi.R2dbcException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.ServerWebInputException;
 import reactor.core.publisher.Mono;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -49,19 +51,18 @@ public class GlobalHandlerException {
 
         log.error("Validation error: {}", ex.getMessage());
 
-        // Extrae todos los errores de validación
-        Map<String, Object> validationErrors = new HashMap<>();
-        ex.getBindingResult().getFieldErrors().forEach(error ->
-                validationErrors.put(error.getField(), error.getDefaultMessage())
-        );
+        String errorMessage = ex.getAllErrors().stream()
+                .findFirst()
+                .map(MessageSourceResolvable::getDefaultMessage)
+                .orElse("Error en la validación de los datos");
 
         ApiErrorResponse apiErrorResponse = ApiErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
                 .error("ValidationError")
-                .message("Error en la validación de los datos")
+                .message(errorMessage)
                 .path(exchange.getRequest().getURI().getPath())
-                .details(validationErrors)
+                .details(null)
                 .build();
 
         return Mono.just(ResponseEntity.badRequest().body(apiErrorResponse));
@@ -149,7 +150,6 @@ public class GlobalHandlerException {
 
         return Mono.just(ResponseEntity.status(HttpStatus.CONFLICT).body(apiErrorResponse));
     }
-
 
     // Catch-all para cualquier excepción no manejada
     @ExceptionHandler(Exception.class)

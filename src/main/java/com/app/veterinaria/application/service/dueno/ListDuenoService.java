@@ -1,15 +1,18 @@
 package com.app.veterinaria.application.service.dueno;
 
 import com.app.veterinaria.application.mapper.DuenoDtoMapper;
+import com.app.veterinaria.domain.model.Dueno;
 import com.app.veterinaria.domain.repository.DuenoRepository;
 import com.app.veterinaria.domain.repository.MascotaRepository;
 import com.app.veterinaria.infrastructure.web.dto.details.DuenoDetails;
-import com.app.veterinaria.shared.exception.mascota.MascotaNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -17,20 +20,33 @@ import reactor.core.publisher.Mono;
 public class ListDuenoService {
 
     private final DuenoRepository duenoRepository;
-    private final DuenoDtoMapper duenoDtoMapper;
     private final MascotaRepository mascotaRepository;
+    private final DuenoDtoMapper duenoDtoMapper;
+
+    final int LIMIT_SIZE = 10;
 
     public Flux<DuenoDetails> execute(){
-        return duenoRepository.findAll()
-                .flatMap(dueno ->
-                        mascotaRepository.findByDuenoId(dueno.getId())
-                                .collectList()
-                                .switchIfEmpty(Mono.error(new MascotaNotFoundException("No se encontraron mascotas registradas")))
-                                .doOnNext(mascotas -> log.info("Se encontraron {} mascota(s) para el dueño {}", mascotas.size(), dueno.getNombre()))
-                                .map(mascotas ->{
-                                    dueno.setMascotas(mascotas);
-                                    return duenoDtoMapper.toDetails(dueno);
-                                })
-                );
+        return duenoRepository.findAll(LIMIT_SIZE)
+                .collectList()
+                .flatMapMany(duenos -> {
+                    if (duenos.isEmpty()) {
+                        return Flux.empty();
+                    }
+
+                    List<UUID> duenoIds = duenos.stream()
+                            .map(Dueno::getId)
+                            .toList();
+
+                    return mascotaRepository.findByDuenoIdIn(duenoIds)
+                            .collectMultimap(mascota -> mascota.getDueno().getId())
+                            .flatMapMany(mascotasByDueno ->
+                                    Flux.fromIterable(duenos)
+                                            .map(dueno -> {
+                                                var mascotas = mascotasByDueno.get(dueno.getId());
+                                                dueno.setMascotas(mascotas != null ? new ArrayList<>(mascotas) : new ArrayList<>());
+                                                return duenoDtoMapper.toDetails(dueno);
+                                            })
+                            );
+                });
     }
 }

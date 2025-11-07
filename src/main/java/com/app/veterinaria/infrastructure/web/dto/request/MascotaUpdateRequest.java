@@ -8,6 +8,5 @@ public record MascotaUpdateRequest(
         String sexo,
         String temperamento,
         String condicionReproductiva,
-        String color,
-        String duenoId
+        String color
 ) { }

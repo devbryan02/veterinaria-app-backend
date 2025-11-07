@@ -25,5 +25,4 @@ public class CreateDuenoService {
                 .doOnNext(d -> log.info("Dueño registrado con id: {}", d.getId()))
                 .map(saved -> OperationResponseStatus.ok("Dueno registrado correctamente"));
     }
-
 }

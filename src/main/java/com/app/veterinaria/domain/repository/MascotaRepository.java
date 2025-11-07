@@ -4,17 +4,18 @@ import com.app.veterinaria.domain.model.Mascota;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface MascotaRepository {
 
     Mono<Mascota> save(Mascota mascota);
-    Flux<Mascota> findAll();
+    Flux<Mascota> findAll(int limit);
     Mono<Boolean> existsById(UUID mascotaId);
     Mono<Void> deleteById(UUID mascotaId);
     Mono<Void> update(Mascota mascota);
     Mono<Mascota> findById(UUID mascotaId);
     Flux<Mascota> findByDuenoId(UUID duenoId);
     Mono<Boolean> existsByDuenoId(UUID duenoId);
-
+    Flux<Mascota> findByDuenoIdIn(List<UUID> duenoIds);
 }

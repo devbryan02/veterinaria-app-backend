@@ -29,10 +29,9 @@ public class FindDuenoService {
                 .flatMap(dueno ->
                         mascotaRepository.findByDuenoId(duenoId)
                                 .collectList()
-                                .switchIfEmpty(Mono.error(new MascotaNotFoundException("No se encontraron mascotas registradas")))
-                                .doOnNext(mascotas -> log.info("Se encontraron {} mascota(s) para el dueño {}", mascotas.size(), dueno.getNombre()))
                                 .map(mascotas -> {
                                     dueno.setMascotas(mascotas);
+                                    log.info("Se encontraron {} mascota(s) para el dueño {}", mascotas.size(), dueno.getNombre());
                                     return duenoDtoMapper.toDetails(dueno);
                                 })
                 );

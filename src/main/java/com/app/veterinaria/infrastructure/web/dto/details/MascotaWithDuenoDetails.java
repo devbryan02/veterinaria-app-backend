@@ -10,7 +10,7 @@ public record MascotaWithDuenoDetails(
         String edad,
         String sexo,
         String temperamento,
-        String condicionReproductiva,
+        String condicionreproductiva,
         String color,
         String dueno
 ) { }
