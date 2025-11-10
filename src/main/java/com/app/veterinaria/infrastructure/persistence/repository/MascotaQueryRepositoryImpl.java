@@ -1,7 +1,7 @@
 package com.app.veterinaria.infrastructure.persistence.repository;
 
 import com.app.veterinaria.application.mapper.MascotaDtoMapper;
-import com.app.veterinaria.application.respository.MascotaQueryRepository;
+import com.app.veterinaria.application.repository.MascotaQueryRepository;
 import com.app.veterinaria.infrastructure.persistence.jpa.MascotaJpaRepository;
 import com.app.veterinaria.infrastructure.web.dto.details.MascotaWithDuenoDetails;
 import lombok.RequiredArgsConstructor;

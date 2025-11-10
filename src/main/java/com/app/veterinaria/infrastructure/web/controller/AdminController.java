@@ -6,7 +6,7 @@ import com.app.veterinaria.application.service.mascota.CreateMascotaService;
 import com.app.veterinaria.application.service.mascota.DeleteMascotaService;
 import com.app.veterinaria.application.service.mascota.GetMascotaService;
 import com.app.veterinaria.application.service.mascota.UpdateMascotaService;
-import com.app.veterinaria.infrastructure.web.dto.details.DuenoDetails;
+import com.app.veterinaria.infrastructure.web.dto.details.DuenoWithCantMascotaDetails;
 import com.app.veterinaria.infrastructure.web.dto.details.MascotaWithDuenoDetails;
 import com.app.veterinaria.infrastructure.web.dto.request.*;
 import com.app.veterinaria.infrastructure.web.dto.response.OperationResponseStatus;
@@ -39,9 +39,7 @@ public class AdminController {
     // Gestión de Dueños (por Admin)
     // ================================
     private final CreateDuenoService createDuenoService;
-    private final FindDuenoService findDuenoService;
-    private final ListDuenoService listDuenoService;
-    private final SearchDuenoService searchDuenoService;
+    private final GetDuenoService getDuenoService;
     private final UpdateDuenoIgnorePasswordAndLocationService updateDuenoService;
     private final DeleteDuenoService deleteDuenoService;
 
@@ -55,22 +53,22 @@ public class AdminController {
     // Listar todos los dueños
     @GetMapping("/dueno")
     @ResponseStatus(HttpStatus.OK)
-    public Flux<DuenoDetails> findAllDueno() {
-        return listDuenoService.execute();
+    public Flux<DuenoWithCantMascotaDetails> findAllDueno() {
+        return getDuenoService.findAllDuenos();
     }
 
     // Buscar un dueño por término
     @GetMapping("/dueno/search")
     @ResponseStatus(HttpStatus.OK)
-    public Flux<DuenoDetails> searchDueno(@RequestParam String term) {
-        return searchDuenoService.execute(term);
+    public Flux<DuenoWithCantMascotaDetails> searchDueno(@RequestParam String term) {
+        return getDuenoService.searchByTerm(term);
     }
 
     // Buscar un dueño por ID
     @GetMapping("/dueno/{duenoId}")
     @ResponseStatus(HttpStatus.OK)
-    public Mono<DuenoDetails> findDuenoById(@PathVariable UUID duenoId) {
-        return findDuenoService.execute(duenoId);
+    public Mono<DuenoWithCantMascotaDetails> findDuenoById(@PathVariable UUID duenoId) {
+        return getDuenoService.findById(duenoId);
     }
 
     // Actualizar dueño (sin contraseña ni ubicación)
@@ -122,9 +120,9 @@ public class AdminController {
     @GetMapping("/mascota/filter")
     @ResponseStatus(HttpStatus.OK)
     public Flux<MascotaWithDuenoDetails> findAllMascotaFilter(
-            @RequestParam("especie") String especie,
-            @RequestParam("sexo") String sexo,
-            @RequestParam("raza") String raza) {
+            @RequestParam(value = "especie", required = false) String especie,
+            @RequestParam(value = "sexo", required = false) String sexo,
+            @RequestParam(value = "raza", required = false) String raza) {
         return getMascotaService.findByFilters(especie, sexo, raza);
     }
 

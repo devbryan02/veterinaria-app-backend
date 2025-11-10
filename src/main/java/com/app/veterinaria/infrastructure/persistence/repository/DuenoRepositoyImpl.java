@@ -7,7 +7,6 @@ import com.app.veterinaria.infrastructure.persistence.entity.DuenoEntity;
 import com.app.veterinaria.infrastructure.persistence.jpa.DuenoJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
@@ -23,11 +22,6 @@ public class DuenoRepositoyImpl implements DuenoRepository {
     public Mono<Dueno> save(Dueno dueno) {
         DuenoEntity entity = duenoMapper.toEntity(dueno);
         return duenoJpaRepository.save(entity).map(duenoMapper::toDomain);
-    }
-
-    @Override
-    public Flux<Dueno> findAll(int limit) {
-        return duenoJpaRepository.findAllWithLimit(limit).map(duenoMapper::toDomain);
     }
 
     @Override
@@ -63,11 +57,6 @@ public class DuenoRepositoyImpl implements DuenoRepository {
     @Override
     public Mono<Void> update(Dueno dueno) {
         return duenoJpaRepository.save(duenoMapper.toEntity(dueno)).then();
-    }
-
-    @Override
-    public Flux<Dueno> search(String term, int limit) {
-        return duenoJpaRepository.search(term, limit).map(duenoMapper::toDomain);
     }
 
 }

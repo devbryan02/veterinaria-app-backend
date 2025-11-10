@@ -1,5 +1,4 @@
 #Documentacion de las APIs de admin
-
 #Crea un nuevo admin
 POST http://localhost:8080/api/v1/admin
 Content-Type: application/json
@@ -24,7 +23,7 @@ Content-Type: application/json
 
 
 ###
-GET localhost:8080/api/v1/admin/mascota/search?term=
+GET localhost:8080/api/v1/admin/mascota/filter?sexo=hembra
 
 ############################################################
 ### Crear un nuevo dueño

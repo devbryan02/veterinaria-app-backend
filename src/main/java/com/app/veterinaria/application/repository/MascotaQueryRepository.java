@@ -1,4 +1,4 @@
-package com.app.veterinaria.application.respository;
+package com.app.veterinaria.application.repository;
 
 import com.app.veterinaria.infrastructure.web.dto.details.MascotaWithDuenoDetails;
 import reactor.core.publisher.Flux;

@@ -10,7 +10,6 @@ import java.util.UUID;
 public interface DuenoRepository {
 
     Mono<Dueno> save(Dueno dueno);
-    Flux<Dueno> findAll(int limit);
     Mono<Boolean> existsByCorreo(String correo);
     Mono<Boolean> existsByTelefono(String telefono);
     Mono<Boolean> existsByDNI(String DNI);
@@ -18,6 +17,5 @@ public interface DuenoRepository {
     Mono<Dueno> findById(UUID id);
     Mono<Void> deleteById(UUID id);
     Mono<Void> update(Dueno dueno);
-    Flux<Dueno> search(String term, int limit);
 
 }

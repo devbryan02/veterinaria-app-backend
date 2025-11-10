@@ -42,25 +42,29 @@ public interface MascotaJpaRepository extends ReactiveCrudRepository<MascotaEnti
     Flux<MascotaWithDuenoDetails> search(@Param("term") String term);
 
     @Query("""
-        SELECT
-            m.id,
-            m.nombre,
-            m.especie,
-            m.raza,
-            m.edad,
-            m.sexo,
-            m.temperamento,
-            m.condicion_reproductiva AS condicionReproductiva,
-            m.color,
-            d.nombre AS dueno
-            FROM mascota m
-            LEFT JOIN dueno d on m.dueno_id = d.id
-        WHERE (:especie IS NULL OR m.especie = :especie)
-          AND (:sexo IS NULL OR m.sexo = :sexo)
-          AND (:raza IS NULL OR m.raza = :raza)
-        ORDER BY m.nombre
-        """)
-    Flux<MascotaWithDuenoDetails> findByFilters(@Param("especie") String especie,@Param("sexo") String sexo,@Param("raza") String raza);
+    SELECT
+        m.id,
+        m.nombre,
+        m.especie,
+        m.raza,
+        m.edad,
+        m.sexo,
+        m.temperamento,
+        m.condicion_reproductiva AS condicionReproductiva,
+        m.color,
+        d.nombre AS dueno
+    FROM mascota m
+    LEFT JOIN dueno d ON m.dueno_id = d.id
+    WHERE (:especie IS NULL OR LOWER(m.especie) = LOWER(:especie))
+      AND (:sexo IS NULL OR LOWER(m.sexo) = LOWER(:sexo))
+      AND (:raza IS NULL OR LOWER(m.raza) = LOWER(:raza))
+    ORDER BY m.nombre
+    """)
+    Flux<MascotaWithDuenoDetails> findByFilters(
+            @Param("especie") String especie,
+            @Param("sexo") String sexo,
+            @Param("raza") String raza
+    );
 
     @Query(value = """
         SELECT
