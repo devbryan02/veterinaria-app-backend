@@ -23,7 +23,7 @@ Content-Type: application/json
 
 
 ###
-GET localhost:8080/api/v1/admin/mascota/filter?sexo=hembra
+DELETE localhost:8080/api/v1/admin/mascota/47927793-a6d5-45a3-b10e-60136ee370f7
 
 ############################################################
 ### Crear un nuevo dueño

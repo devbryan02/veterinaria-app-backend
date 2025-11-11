@@ -22,9 +22,7 @@ public class MascotaQueryRepositoryImpl implements MascotaQueryRepository {
 
     @Override
     public Flux<MascotaWithDuenoDetails> findAllWithDueno() {
-        return jpaRepository.findAllWithDueno()
-                .doOnNext(m -> log.info("masconta con dueno: {} ",m))
-                .doOnComplete(() -> log.info("Listado completado"));
+        return jpaRepository.findAllWithDueno();
     }
 
     @Override

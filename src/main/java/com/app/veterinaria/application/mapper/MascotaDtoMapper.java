@@ -16,6 +16,8 @@ public interface MascotaDtoMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "imagenes", ignore = true)
     @Mapping(target = "dueno", expression = "java(mapDueno(request.duenoId()))")
+    @Mapping(target = "fechaCreacion", ignore = true)
+    @Mapping(target = "identificador", ignore = true)
     Mascota toDomain(MascotaNewRequest request);
 
     // Metodo auxiliar para construir el objeto Dueno a partir de su ID
@@ -31,6 +33,8 @@ public interface MascotaDtoMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "dueno", ignore = true)
     @Mapping(target = "imagenes", ignore = true)
+    @Mapping(target = "fechaCreacion", ignore = true)
+    @Mapping(target = "identificador", ignore = true)
     void updateMascotaFromRequest(MascotaUpdateRequest request, @MappingTarget Mascota mascota);
 
 }

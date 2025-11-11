@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -30,5 +31,8 @@ public class MascotaEntity {
     private String color;
     @Column("dueno_id")
     private UUID duenoId;
+    @Column("fecha_creacion")
+    private LocalDate fechaCreacion;
+    private String identificador;
 
 }

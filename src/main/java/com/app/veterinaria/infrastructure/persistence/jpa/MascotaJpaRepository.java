@@ -33,7 +33,8 @@ public interface MascotaJpaRepository extends ReactiveCrudRepository<MascotaEnti
         m.temperamento,
         m.condicion_reproductiva AS condicionReproductiva,
         m.color,
-        d.nombre AS dueno
+        d.nombre AS dueno,
+        m.identificador
     FROM mascota m
     LEFT JOIN dueno d ON m.dueno_id = d.id
     WHERE LOWER(m.nombre) LIKE LOWER(CONCAT('%', :term, '%'))
@@ -52,7 +53,8 @@ public interface MascotaJpaRepository extends ReactiveCrudRepository<MascotaEnti
         m.temperamento,
         m.condicion_reproductiva AS condicionReproductiva,
         m.color,
-        d.nombre AS dueno
+        d.nombre AS dueno,
+        m.identificador
     FROM mascota m
     LEFT JOIN dueno d ON m.dueno_id = d.id
     WHERE (:especie IS NULL OR LOWER(m.especie) = LOWER(:especie))
@@ -77,7 +79,8 @@ public interface MascotaJpaRepository extends ReactiveCrudRepository<MascotaEnti
             m.temperamento,
             m.condicion_reproductiva AS condicionreproductiva,
             m.color,
-            d.nombre AS dueno
+            d.nombre AS dueno,
+            m.identificador
         FROM mascota m
         LEFT JOIN dueno d ON m.dueno_id = d.id
         ORDER BY m.nombre
@@ -97,7 +100,8 @@ public interface MascotaJpaRepository extends ReactiveCrudRepository<MascotaEnti
             m.temperamento,
             m.condicion_reproductiva AS condicionReproductiva,
             m.color,
-            d.nombre AS dueno
+            d.nombre AS dueno,
+            m.identificador
         FROM mascota m
         LEFT JOIN dueno d ON m.dueno_id = d.id
         WHERE m.id = :mascotaId

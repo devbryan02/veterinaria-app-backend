@@ -1,5 +1,6 @@
 package com.app.veterinaria.domain.model;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,6 +16,8 @@ public class Mascota {
     private String condicionReproductiva;
     private String color;
     private Dueno dueno;
+    private LocalDate fechaCreacion;
+    private String identificador;
 
     private List<Imagen> imagenes;
 
@@ -22,7 +25,7 @@ public class Mascota {
     public Mascota() {}
 
     //constructor lleno
-    public Mascota(UUID id, String nombre, String especie, String raza, String edad, String sexo, String temperamento, String condicionReproductiva, String color, Dueno dueno, List<Imagen> imagenes) {
+    public Mascota(UUID id, String nombre, String especie, String raza, String edad, String sexo, String temperamento, String condicionReproductiva, String color, Dueno dueno, List<Imagen> imagenes, LocalDate fechaCreacion, String identificador) {
         this.id = id;
         this.nombre = nombre;
         this.especie = especie;
@@ -34,6 +37,8 @@ public class Mascota {
         this.color = color;
         this.dueno = dueno;
         this.imagenes = imagenes;
+        this.fechaCreacion = fechaCreacion;
+        this.identificador = identificador;
     }
 
     public UUID getId() {
@@ -122,5 +127,21 @@ public class Mascota {
 
     public void setImagenes(List<Imagen> imagenes) {
         this.imagenes = imagenes;
+    }
+
+    public LocalDate getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDate fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public String getIdentificador() {
+        return identificador;
+    }
+
+    public void setIdentificador(String identificador) {
+        this.identificador = identificador;
     }
 }

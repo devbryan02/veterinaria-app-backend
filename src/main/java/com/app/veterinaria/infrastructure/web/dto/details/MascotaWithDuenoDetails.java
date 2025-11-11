@@ -12,5 +12,6 @@ public record MascotaWithDuenoDetails(
         String temperamento,
         String condicionreproductiva,
         String color,
-        String dueno
+        String dueno,
+        String identificador
 ) { }

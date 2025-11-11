@@ -21,30 +21,28 @@ public class ValidateMascotaRelationsService {
     private final VacunaRepository vacunaRepository;
 
     public Mono<Void> execute(UUID mascotaId) {
-
         Mono<Boolean> tieneVacuna = vacunaRepository.existsByMascotaId(mascotaId);
         Mono<Boolean> tieneImagen = imagenRepository.existsByMascotaId(mascotaId);
 
-        final String MESSAGE_VACUNA = "No es posible eliminar porque la mascota tiene registos de vacunas";
-        final String MESSGE_IMAGE = "No es posible eliminar porque la mascota tiene imagenes asociadas";
+        final String MESSAGE_VACUNA = "No es posible eliminar porque la mascota tiene registros de vacunas";
+        final String MESSAGE_IMAGE = "No es posible eliminar porque la mascota tiene imágenes asociadas";
 
         return Mono.zip(tieneVacuna, tieneImagen)
-                .handle((tuple, sink)-> {
+                .flatMap(tuple -> {
+                    List<String> errores = new ArrayList<>();
 
-                    List<String> erros = new ArrayList<>();
+                    if (tuple.getT1()) errores.add(MESSAGE_VACUNA);
+                    if (tuple.getT2()) errores.add(MESSAGE_IMAGE);
 
-                    if(tuple.getT1()) erros.add(MESSAGE_VACUNA);
-                    if(tuple.getT2()) erros.add(MESSGE_IMAGE);
-
-                    if(!erros.isEmpty()) {
-                        String message = String.join(", ", erros);
-                        log.warn("Error en las valicaciones");
-                        sink.error(new MascotaWithRelationsException(message));
-                    } else {
-                        log.debug("Validacion exitosa");
-                        sink.complete();
+                    if (!errores.isEmpty()) {
+                        String message = String.join(", ", errores);
+                        log.warn("Error en las validaciones: {}", message);
+                        return Mono.error(new MascotaWithRelationsException(message));
                     }
-                });
 
+                    log.debug("Validación exitosa para mascota {}", mascotaId);
+                    return Mono.empty();
+                });
     }
+
 }

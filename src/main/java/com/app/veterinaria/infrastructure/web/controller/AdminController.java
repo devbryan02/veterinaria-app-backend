@@ -145,7 +145,7 @@ public class AdminController {
 
     // Eliminar una mascota con su ID
     @DeleteMapping("/mascota/{mascotaId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     public Mono<OperationResponseStatus> deleteMascota(@PathVariable UUID mascotaId) {
         return deleteMascotaService.execute(mascotaId);
     }

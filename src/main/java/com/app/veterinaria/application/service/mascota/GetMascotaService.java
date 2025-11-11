@@ -21,25 +21,25 @@ public class GetMascotaService {
     public Mono<MascotaWithDuenoDetails> findById(UUID id) {
         return mascotaQueryRepository.findById(id)
                 .switchIfEmpty(Mono.error(new MascotaNotFoundException("Mascota con ID " + id + " no encontrada")))
-                .doOnSubscribe(sub -> log.debug("Buscando mascota con ID: {}", id))
-                .doOnNext(m -> log.debug("Mascota encontrada: {}", m.nombre()));
+                .doOnSubscribe(sub -> log.info("Buscando mascota con ID: {}", id))
+                .doOnNext(m -> log.info("Mascota encontrada: {}", m.nombre()));
     }
 
     public Flux<MascotaWithDuenoDetails> findAll() {
         return mascotaQueryRepository.findAllWithDueno()
-                .doOnSubscribe(sub -> log.debug("Listando todas las mascotas"))
-                .doOnComplete(() -> log.debug("Listado de mascotas completado"));
+                .doOnSubscribe(sub -> log.info("Listando todas las mascotas"))
+                .doOnComplete(() -> log.info("Listado completado"));
     }
 
     public Flux<MascotaWithDuenoDetails> search(String term) {
         return mascotaQueryRepository.search(term)
-                .doOnSubscribe(sub -> log.debug("Buscando mascotas con término: {}", term))
-                .doOnComplete(() -> log.debug("Búsqueda completada para término: {}", term));
+                .doOnSubscribe(sub -> log.info("Buscando mascotas con término: {}", term))
+                .doOnComplete(() -> log.info("Búsqueda completada para término: {}", term));
     }
 
     public Flux<MascotaWithDuenoDetails> findByFilters(String especie, String sexo, String raza) {
         return mascotaQueryRepository.findByFilters(especie, sexo, raza)
-                .doOnSubscribe(sub -> log.debug("Filtrando mascotas - especie={}, sexo={}, raza={}", especie, sexo, raza))
-                .doOnComplete(() -> log.debug("Filtrado completado"));
+                .doOnSubscribe(sub -> log.info("Filtrando mascotas - especie={}, sexo={}, raza={}", especie, sexo, raza))
+                .doOnComplete(() -> log.info("Filtrado completado"));
     }
 }
