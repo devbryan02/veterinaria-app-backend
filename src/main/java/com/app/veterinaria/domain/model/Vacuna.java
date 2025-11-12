@@ -9,7 +9,7 @@ public class Vacuna {
     private String tipo;
     private LocalDate fechaAplicacion;
     private Mascota mascota;
-    private Integer mesesVigencia = 12; // Default 12 meses
+    private Integer mesesVigencia;
     private LocalDate fechaVencimiento;
     private LocalDate proximaDosis;
 

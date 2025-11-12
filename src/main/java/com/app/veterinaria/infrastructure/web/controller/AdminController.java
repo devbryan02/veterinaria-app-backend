@@ -6,17 +6,23 @@ import com.app.veterinaria.application.service.mascota.CreateMascotaService;
 import com.app.veterinaria.application.service.mascota.DeleteMascotaService;
 import com.app.veterinaria.application.service.mascota.GetMascotaService;
 import com.app.veterinaria.application.service.mascota.UpdateMascotaService;
+import com.app.veterinaria.application.service.vacuna.CreateVacunaService;
+import com.app.veterinaria.application.service.vacuna.GetVacunaService;
 import com.app.veterinaria.infrastructure.web.dto.details.DuenoWithCantMascotaDetails;
 import com.app.veterinaria.infrastructure.web.dto.details.MascotaWithDuenoDetails;
+import com.app.veterinaria.infrastructure.web.dto.details.VacunaWithMascotaDetails;
 import com.app.veterinaria.infrastructure.web.dto.request.*;
 import com.app.veterinaria.infrastructure.web.dto.response.OperationResponseStatus;
 import jakarta.validation.Valid;
+import jdk.dynalink.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @RestController
@@ -148,6 +154,44 @@ public class AdminController {
     @ResponseStatus(HttpStatus.OK)
     public Mono<OperationResponseStatus> deleteMascota(@PathVariable UUID mascotaId) {
         return deleteMascotaService.execute(mascotaId);
+    }
+
+    // ================================
+    // Gestión de Vacunas (por Admin)
+    // ================================
+    private final CreateVacunaService createVacunaService;
+    private final GetVacunaService getVacunaService;
+
+    @PostMapping("/vacuna")
+    @ResponseStatus(HttpStatus.CREATED)
+    private Mono<OperationResponseStatus> createVacuna(@RequestBody @Valid VacunaNewRequest request) {
+        return createVacunaService.execute(request);
+    }
+
+    @GetMapping("/vacuna/{idVacuna}")
+    @ResponseStatus(HttpStatus.OK)
+    public Mono<VacunaWithMascotaDetails> findVacunaById(@PathVariable("idVacuna") UUID id) {
+        return getVacunaService.findById(id);
+    }
+
+    @GetMapping("/vacuna")
+    @ResponseStatus(HttpStatus.OK)
+    public Flux<VacunaWithMascotaDetails> findAllVacuna() {
+        return getVacunaService.findAll();
+    }
+
+    @GetMapping("/vacuna/filter")
+    @ResponseStatus(HttpStatus.OK)
+    public Flux<VacunaWithMascotaDetails> filterByTipo(@RequestParam("tipo") String tipo) {
+        return getVacunaService.filterByTipo(tipo);
+    }
+
+    @GetMapping("/vacuna/find")
+    @ResponseStatus(HttpStatus.OK)
+    public Flux<VacunaWithMascotaDetails> findByDate(
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        return getVacunaService.findVacunasByDate(startDate, endDate);
     }
 
 }
