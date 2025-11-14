@@ -10,7 +10,6 @@ public class Mascota {
     private String nombre;
     private String especie;
     private String raza;
-    private String edad;
     private String sexo;
     private String temperamento;
     private String condicionReproductiva;
@@ -18,6 +17,8 @@ public class Mascota {
     private Dueno dueno;
     private LocalDate fechaCreacion;
     private String identificador;
+    private Integer anios;
+    private Integer meses;
 
     private List<Imagen> imagenes;
 
@@ -25,12 +26,11 @@ public class Mascota {
     public Mascota() {}
 
     //constructor lleno
-    public Mascota(UUID id, String nombre, String especie, String raza, String edad, String sexo, String temperamento, String condicionReproductiva, String color, Dueno dueno, List<Imagen> imagenes, LocalDate fechaCreacion, String identificador) {
+    public Mascota(UUID id, String nombre, String especie, String raza, String sexo, String temperamento, String condicionReproductiva, String color, Dueno dueno, List<Imagen> imagenes, LocalDate fechaCreacion, String identificador, Integer anios, Integer meses) {
         this.id = id;
         this.nombre = nombre;
         this.especie = especie;
         this.raza = raza;
-        this.edad = edad;
         this.sexo = sexo;
         this.temperamento = temperamento;
         this.condicionReproductiva = condicionReproductiva;
@@ -39,6 +39,8 @@ public class Mascota {
         this.imagenes = imagenes;
         this.fechaCreacion = fechaCreacion;
         this.identificador = identificador;
+        this.anios = anios;
+        this.meses = meses;
     }
 
     public UUID getId() {
@@ -71,14 +73,6 @@ public class Mascota {
 
     public void setRaza(String raza) {
         this.raza = raza;
-    }
-
-    public String getEdad() {
-        return edad;
-    }
-
-    public void setEdad(String edad) {
-        this.edad = edad;
     }
 
     public String getSexo() {
@@ -144,4 +138,21 @@ public class Mascota {
     public void setIdentificador(String identificador) {
         this.identificador = identificador;
     }
+
+    public Integer getAnios() {
+        return anios;
+    }
+
+    public void setAnios(Integer anios){
+        this.anios = anios;
+    }
+
+    public Integer getMeses() {
+        return meses;
+    }
+
+    public void setMeses(Integer meses) {
+        this.meses = meses;
+    }
+
 }

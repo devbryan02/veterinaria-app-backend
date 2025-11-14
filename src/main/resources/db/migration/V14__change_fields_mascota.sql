@@ -1,0 +1,12 @@
+--REFACTORIZACION DE EDAD EN LAS MASCOTAS - PASAR A ANIOS Y MESES
+--PRIMERO ELIMINAMOS LA COLUMNA EDAD (era varchar con datos inconsistentes)
+ALTER TABLE mascota
+    DROP COLUMN edad;
+
+--AGREGAMOS LA COLUMNA ANIOS
+ALTER TABLE mascota
+    ADD COLUMN anios int CHECK (anios >= 0);
+
+--AGREGAMOS LA COLUMNA MESES
+ALTER TABLE mascota
+    ADD COLUMN meses int CHECK (meses >= 0 AND meses < 12);

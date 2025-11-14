@@ -8,19 +8,11 @@ import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface MascotaJpaRepository extends ReactiveCrudRepository<MascotaEntity, UUID> {
 
-    Flux<MascotaEntity> findByDuenoId(UUID duenoId);
     Mono<Boolean> existsByDuenoId(UUID duenoId);
-
-    @Query("SELECT * FROM mascota WHERE dueno_id IN (:duenoIds)")
-    Flux<MascotaEntity> findByDuenoIdIn(@Param("duenoIds") List<UUID> duenoIds);
-
-    @Query("SELECT * FROM mascota ORDER BY nombre LIMIT :limit")
-    Flux<MascotaEntity> findAllWithLimit(int limit);
 
     @Query("""
     SELECT
@@ -28,7 +20,7 @@ public interface MascotaJpaRepository extends ReactiveCrudRepository<MascotaEnti
         m.nombre,
         m.especie,
         m.raza,
-        m.edad,
+        concat(m.anios, '.', m.meses, ' meses') AS edad,
         m.sexo,
         m.temperamento,
         m.condicion_reproductiva AS condicionReproductiva,
@@ -48,7 +40,7 @@ public interface MascotaJpaRepository extends ReactiveCrudRepository<MascotaEnti
         m.nombre,
         m.especie,
         m.raza,
-        m.edad,
+        concat(m.anios, '.', m.meses, ' meses') AS edad,
         m.sexo,
         m.temperamento,
         m.condicion_reproductiva AS condicionReproductiva,
@@ -74,7 +66,7 @@ public interface MascotaJpaRepository extends ReactiveCrudRepository<MascotaEnti
             m.nombre,
             m.especie,
             m.raza,
-            m.edad,
+            concat(m.anios, '.', m.meses, ' meses') AS edad,
             m.sexo,
             m.temperamento,
             m.condicion_reproductiva AS condicionreproductiva,
@@ -83,7 +75,7 @@ public interface MascotaJpaRepository extends ReactiveCrudRepository<MascotaEnti
             m.identificador
         FROM mascota m
         LEFT JOIN dueno d ON m.dueno_id = d.id
-        ORDER BY m.nombre
+        ORDER BY m.fecha_creacion DESC
         LIMIT 20
         """)
     Flux<MascotaWithDuenoDetails> findAllWithDueno();
@@ -95,7 +87,7 @@ public interface MascotaJpaRepository extends ReactiveCrudRepository<MascotaEnti
             m.nombre,
             m.especie,
             m.raza,
-            m.edad,
+            concat(m.anios, '.', m.meses, ' meses') AS edad,
             m.sexo,
             m.temperamento,
             m.condicion_reproductiva AS condicionReproductiva,
@@ -105,6 +97,7 @@ public interface MascotaJpaRepository extends ReactiveCrudRepository<MascotaEnti
         FROM mascota m
         LEFT JOIN dueno d ON m.dueno_id = d.id
         WHERE m.id = :mascotaId
+        ORDER BY m.nombre;
     """)
     Mono<MascotaWithDuenoDetails> findByIdDetails(@Param("mascotaId") UUID mascotaId);
 

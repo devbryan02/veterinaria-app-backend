@@ -8,7 +8,6 @@ import com.app.veterinaria.infrastructure.persistence.jpa.MascotaJpaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
@@ -25,11 +24,6 @@ public class MascotaRepositoryImpl implements MascotaRepository {
     public Mono<Mascota> save(Mascota mascota) {
         MascotaEntity entity = mascotaMapper.toEntity(mascota);
         return mascotaJpaRepository.save(entity).map(mascotaMapper::toDomain);
-    }
-
-    @Override
-    public Flux<Mascota> findAll(int limit) {
-        return mascotaJpaRepository.findAllWithLimit(limit).map(mascotaMapper::toDomain);
     }
 
     @Override

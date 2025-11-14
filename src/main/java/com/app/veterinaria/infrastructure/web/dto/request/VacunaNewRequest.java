@@ -16,12 +16,12 @@ public record VacunaNewRequest (
         @NotBlank(message = "El id de la mascota es obligatorio")
         String mascotaId,
 
-        @NotBlank(message = "El mes de vigencia es Obligatorio")
+        @NotNull(message = "El mes de vigencia no debe ser nulo")
         Integer mesesVigencia,
 
-        @NotBlank(message = "El fecha de vencimiento es obligatorio")
+        @NotNull(message = "La fecha de vecimiento no debe ser nulo")
         LocalDate fechaVencimiento,
 
-        @NotBlank(message = "La proxima dosis es obligatorio")
+        @NotNull(message = "El proximo dosis no debe ser nulo")
         LocalDate proximaDosis
 ) { }

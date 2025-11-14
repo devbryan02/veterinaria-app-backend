@@ -14,7 +14,6 @@ import com.app.veterinaria.infrastructure.web.dto.details.VacunaWithMascotaDetai
 import com.app.veterinaria.infrastructure.web.dto.request.*;
 import com.app.veterinaria.infrastructure.web.dto.response.OperationResponseStatus;
 import jakarta.validation.Valid;
-import jdk.dynalink.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -186,7 +185,7 @@ public class AdminController {
         return getVacunaService.filterByTipo(tipo);
     }
 
-    @GetMapping("/vacuna/find")
+    @GetMapping("/vacuna/date-range")
     @ResponseStatus(HttpStatus.OK)
     public Flux<VacunaWithMascotaDetails> findByDate(
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,

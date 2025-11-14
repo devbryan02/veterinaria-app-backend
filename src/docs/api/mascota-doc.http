@@ -19,7 +19,6 @@ Content-Type: application/json
   "nombre": "Luna",
   "especie": "Perro",
   "raza": "Chuzco",
-  "edad": "12",
   "sexo": "Hembra",
   "temperamento": "Juguetona",
   "condicionReproductiva": "Entera",

@@ -9,7 +9,6 @@ import java.util.UUID;
 public interface MascotaRepository {
 
     Mono<Mascota> save(Mascota mascota);
-    Flux<Mascota> findAll(int limit);
     Mono<Boolean> existsById(UUID mascotaId);
     Mono<Void> deleteById(UUID mascotaId);
     Mono<Void> update(Mascota mascota);

@@ -23,7 +23,6 @@ public class MascotaEntity {
     private String nombre;
     private String especie;
     private String raza;
-    private String edad;
     private String sexo;
     private String temperamento;
     @Column("condicion_reproductiva")
@@ -34,5 +33,7 @@ public class MascotaEntity {
     @Column("fecha_creacion")
     private LocalDate fechaCreacion;
     private String identificador;
+    private Integer anios;
+    private Integer meses;
 
 }

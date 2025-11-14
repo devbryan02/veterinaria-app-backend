@@ -1,6 +1,6 @@
 package com.app.veterinaria.infrastructure.web.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.*;
 
 public record MascotaNewRequest(
 
@@ -12,9 +12,6 @@ public record MascotaNewRequest(
 
         @NotBlank(message = "La raza es obligatorio")
         String raza,
-
-        @NotBlank(message = "La edad es obligatorio")
-        String edad,
 
         @NotBlank(message = "El sexo es obligatorio")
         String sexo,
@@ -29,7 +26,12 @@ public record MascotaNewRequest(
         String color,
 
         @NotBlank(message = "El id del dueño es obligatorio")
-        String duenoId
+        String duenoId,
+        Integer anios,
+
+        @Min(value = 0, message = "Los meses no pueden ser negativos")
+        @Max(value = 11, message = "Los meses deben ser entre 0 y 11")
+        Integer meses
 ) { }
 
 
