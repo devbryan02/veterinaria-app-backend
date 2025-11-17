@@ -34,4 +34,9 @@ public class ImagenRepositoryImpl implements ImagenRepository {
     public Mono<Boolean> existsByMascotaId(UUID mascotaId) {
         return imagenJpaRepository.existsByMascotaId(mascotaId);
     }
+
+    @Override
+    public Flux<Imagen> findByMascotaId(UUID mascotaId) {
+        return imagenJpaRepository.findByMascotaId(mascotaId).map(imagenMapper::toDomain);
+    }
 }

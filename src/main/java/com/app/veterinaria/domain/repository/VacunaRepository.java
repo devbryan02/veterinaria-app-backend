@@ -11,5 +11,6 @@ public interface VacunaRepository {
     Mono<Vacuna> save(Vacuna vacuna);
     Flux<Vacuna> findAll();
     Mono<Boolean> existsByMascotaId(UUID mascotaId);
+    Flux<Vacuna> findByMascotaId(UUID mascotaId);
 
 }

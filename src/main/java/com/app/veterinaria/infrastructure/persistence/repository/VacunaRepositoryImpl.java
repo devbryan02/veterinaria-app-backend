@@ -35,4 +35,9 @@ public class VacunaRepositoryImpl implements VacunaRepository {
     public Mono<Boolean> existsByMascotaId(UUID mascotaId) {
         return vacunaJpaRepository.existsByMascotaId(mascotaId);
     }
+
+    @Override
+    public Flux<Vacuna> findByMascotaId(UUID mascotaId) {
+        return vacunaJpaRepository.findByMascotaId(mascotaId).map(mapper::toDomain);
+    }
 }

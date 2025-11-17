@@ -2,13 +2,11 @@ package com.app.veterinaria.infrastructure.web.controller;
 
 import com.app.veterinaria.application.service.admin.CreateAdminService;
 import com.app.veterinaria.application.service.dueno.*;
-import com.app.veterinaria.application.service.mascota.CreateMascotaService;
-import com.app.veterinaria.application.service.mascota.DeleteMascotaService;
-import com.app.veterinaria.application.service.mascota.GetMascotaService;
-import com.app.veterinaria.application.service.mascota.UpdateMascotaService;
+import com.app.veterinaria.application.service.mascota.*;
 import com.app.veterinaria.application.service.vacuna.CreateVacunaService;
 import com.app.veterinaria.application.service.vacuna.GetVacunaService;
 import com.app.veterinaria.infrastructure.web.dto.details.DuenoWithCantMascotaDetails;
+import com.app.veterinaria.infrastructure.web.dto.details.MascotaPageDetails;
 import com.app.veterinaria.infrastructure.web.dto.details.MascotaWithDuenoDetails;
 import com.app.veterinaria.infrastructure.web.dto.details.VacunaWithMascotaDetails;
 import com.app.veterinaria.infrastructure.web.dto.request.*;
@@ -99,6 +97,7 @@ public class AdminController {
     private final GetMascotaService getMascotaService;
     private final UpdateMascotaService updateMascotaService;
     private final DeleteMascotaService deleteMascotaService;
+    private final GetMascotaPageDetailsService getMascotaPageDetailsService;
 
     // Crear una nueva mascota
     @PostMapping("/mascota")
@@ -112,6 +111,12 @@ public class AdminController {
     @ResponseStatus(HttpStatus.OK)
     public Flux<MascotaWithDuenoDetails> findAllMascota() {
         return getMascotaService.findAll();
+    }
+
+    @GetMapping("/mascota/page/{mascotaId}")
+    @ResponseStatus(HttpStatus.OK)
+    public Mono<MascotaPageDetails> findMascotaPage(@PathVariable UUID mascotaId) {
+        return getMascotaPageDetailsService.execute(mascotaId);
     }
 
     // Buscar mascotas por un termino

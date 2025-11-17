@@ -2,6 +2,8 @@ package com.app.veterinaria.application.mapper;
 
 import com.app.veterinaria.domain.model.Mascota;
 import com.app.veterinaria.domain.model.Vacuna;
+import com.app.veterinaria.infrastructure.web.dto.details.MascotaPageDetails;
+import com.app.veterinaria.infrastructure.web.dto.details.MascotaPageDetails.*;
 import com.app.veterinaria.infrastructure.web.dto.request.VacunaNewRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

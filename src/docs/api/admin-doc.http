@@ -23,7 +23,7 @@ Content-Type: application/json
 
 
 ###
-GET localhost:8080/api/v1/admin/mascota
+GET localhost:8080/api/v1/admin/mascota/page/0d1a26a4-ea5c-4bfa-91b1-397ebd707d0b
 
 ############################################################
 ### Crear un nuevo dueño

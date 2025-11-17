@@ -80,4 +80,6 @@ public interface VacunaJpaRepository extends ReactiveCrudRepository<VacunaEntity
     """)
     Mono<VacunaWithMascotaDetails> findByIdVacuna(@Param("idVacuna") UUID idVacuna);
 
+    Flux<VacunaEntity> findByMascotaId(UUID mascotaId);
+
 }

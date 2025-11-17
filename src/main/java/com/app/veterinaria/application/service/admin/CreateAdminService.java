@@ -9,7 +9,6 @@ import com.app.veterinaria.infrastructure.web.dto.response.OperationResponseStat
 import com.app.veterinaria.shared.exception.admin.AdminCreateException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 

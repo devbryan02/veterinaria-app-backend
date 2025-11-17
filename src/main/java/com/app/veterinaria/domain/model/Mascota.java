@@ -1,5 +1,7 @@
 package com.app.veterinaria.domain.model;
 
+import com.app.veterinaria.domain.emuns.EstadoMascota;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -19,6 +21,7 @@ public class Mascota {
     private String identificador;
     private Integer anios;
     private Integer meses;
+    private EstadoMascota estado;
 
     private List<Imagen> imagenes;
 
@@ -26,7 +29,7 @@ public class Mascota {
     public Mascota() {}
 
     //constructor lleno
-    public Mascota(UUID id, String nombre, String especie, String raza, String sexo, String temperamento, String condicionReproductiva, String color, Dueno dueno, List<Imagen> imagenes, LocalDate fechaCreacion, String identificador, Integer anios, Integer meses) {
+    public Mascota(UUID id, String nombre, String especie, String raza, String sexo, String temperamento, String condicionReproductiva, String color, Dueno dueno, List<Imagen> imagenes, LocalDate fechaCreacion, String identificador, Integer anios, Integer meses, EstadoMascota estado) {
         this.id = id;
         this.nombre = nombre;
         this.especie = especie;
@@ -41,6 +44,7 @@ public class Mascota {
         this.identificador = identificador;
         this.anios = anios;
         this.meses = meses;
+        this.estado = estado;
     }
 
     public UUID getId() {
@@ -153,6 +157,14 @@ public class Mascota {
 
     public void setMeses(Integer meses) {
         this.meses = meses;
+    }
+
+    public EstadoMascota getEstado(){
+        return estado;
+    }
+
+    public void setEstado(EstadoMascota estado){
+        this.estado = estado;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.app.veterinaria.infrastructure.persistence.entity;
 
+import com.app.veterinaria.domain.emuns.EstadoMascota;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,5 +36,6 @@ public class MascotaEntity {
     private String identificador;
     private Integer anios;
     private Integer meses;
+    private EstadoMascota estado;
 
 }

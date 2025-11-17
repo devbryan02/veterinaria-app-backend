@@ -11,5 +11,6 @@ public interface ImagenRepository {
     Mono<Imagen> save(Imagen imagen);
     Flux<Imagen> findAll();
     Mono<Boolean> existsByMascotaId(UUID mascotaId);
+    Flux<Imagen> findByMascotaId(UUID mascotaId);
 
 }
