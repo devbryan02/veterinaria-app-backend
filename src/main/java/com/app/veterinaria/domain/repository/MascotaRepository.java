@@ -14,4 +14,5 @@ public interface MascotaRepository {
     Mono<Void> update(Mascota mascota);
     Mono<Mascota> findById(UUID mascotaId);
     Mono<Boolean> existsByDuenoId(UUID duenoId);
+    Flux<Mascota> findByDuenoId(UUID duenoId);
 }

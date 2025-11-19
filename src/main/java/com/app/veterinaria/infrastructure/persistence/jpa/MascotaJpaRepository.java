@@ -80,7 +80,6 @@ public interface MascotaJpaRepository extends ReactiveCrudRepository<MascotaEnti
         """)
     Flux<MascotaWithDuenoDetails> findAllWithDueno();
 
-
     @Query("""
     SELECT
             m.id,
@@ -100,5 +99,7 @@ public interface MascotaJpaRepository extends ReactiveCrudRepository<MascotaEnti
         ORDER BY m.nombre;
     """)
     Mono<MascotaWithDuenoDetails> findByIdDetails(@Param("mascotaId") UUID mascotaId);
+
+    Flux<MascotaEntity> findByDuenoId(UUID duenoId);
 
 }

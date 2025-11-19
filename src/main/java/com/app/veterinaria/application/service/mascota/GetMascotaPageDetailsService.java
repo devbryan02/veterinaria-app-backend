@@ -11,6 +11,7 @@ import com.app.veterinaria.infrastructure.web.dto.details.*;
 import com.app.veterinaria.infrastructure.web.dto.details.resume.DuenoResumen;
 import com.app.veterinaria.infrastructure.web.dto.details.resume.ImagenResumen;
 import com.app.veterinaria.infrastructure.web.dto.details.resume.VacunasResumen;
+import com.app.veterinaria.shared.exception.mascota.MascotaNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,18 +34,16 @@ public class GetMascotaPageDetailsService {
     public Mono<MascotaPageDetails> execute(UUID mascotaId) {
 
         return mascotaRepository.findById(mascotaId)
-                .switchIfEmpty(Mono.error(new RuntimeException("Mascota no encontrada")))
+                .switchIfEmpty(Mono.error(new MascotaNotFoundException("Mascota no encontrada")))
                 .flatMap(this::loadRelations);
     }
 
     private Mono<MascotaPageDetails> loadRelations(Mascota mascota) {
 
-        Mono<DuenoResumen> duenoMono =
-                duenoRepository.findById(mascota.getDueno().getId())
+        Mono<DuenoResumen> duenoMono = duenoRepository.findById(mascota.getDueno().getId())
                         .map(mapper::toDuenoResumen);
 
-        Mono<VacunasResumen> vacunasMono =
-                vacunaRepository.findByMascotaId(mascota.getId())
+        Mono<VacunasResumen> vacunasMono = vacunaRepository.findByMascotaId(mascota.getId())
                         .map(mapper::toVacunaDetalle)
                         .collectList()
                         .map(vacunas -> new VacunasResumen(
@@ -52,8 +51,7 @@ public class GetMascotaPageDetailsService {
                                 vacunas
                         ));
 
-        Mono<List<ImagenResumen>> imagenesMono =
-                imagenRepository.findByMascotaId(mascota.getId())
+        Mono<List<ImagenResumen>> imagenesMono = imagenRepository.findByMascotaId(mascota.getId())
                         .map(mapper::toImagenResumen)
                         .collectList();
 

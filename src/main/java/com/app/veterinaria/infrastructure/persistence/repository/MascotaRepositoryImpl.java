@@ -6,14 +6,13 @@ import com.app.veterinaria.infrastructure.mapper.MascotaMapper;
 import com.app.veterinaria.infrastructure.persistence.entity.MascotaEntity;
 import com.app.veterinaria.infrastructure.persistence.jpa.MascotaJpaRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
 @Repository
-@Slf4j
 @RequiredArgsConstructor
 public class MascotaRepositoryImpl implements MascotaRepository {
 
@@ -49,5 +48,10 @@ public class MascotaRepositoryImpl implements MascotaRepository {
     @Override
     public Mono<Boolean> existsByDuenoId(UUID duenoId) {
         return mascotaJpaRepository.existsByDuenoId(duenoId);
+    }
+
+    @Override
+    public Flux<Mascota> findByDuenoId(UUID duenoId) {
+        return mascotaJpaRepository.findByDuenoId(duenoId).map(mascotaMapper::toDomain);
     }
 }

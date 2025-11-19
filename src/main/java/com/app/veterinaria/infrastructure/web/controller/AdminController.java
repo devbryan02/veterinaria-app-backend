@@ -3,6 +3,7 @@ package com.app.veterinaria.infrastructure.web.controller;
 import com.app.veterinaria.application.service.admin.CreateAdminService;
 import com.app.veterinaria.application.service.dueno.*;
 import com.app.veterinaria.application.service.mascota.*;
+import com.app.veterinaria.application.service.reportes.ExportService;
 import com.app.veterinaria.application.service.vacuna.CreateVacunaService;
 import com.app.veterinaria.application.service.vacuna.GetVacunaService;
 import com.app.veterinaria.infrastructure.web.dto.details.DuenoWithCantMascotaDetails;
@@ -13,12 +14,16 @@ import com.app.veterinaria.infrastructure.web.dto.request.*;
 import com.app.veterinaria.infrastructure.web.dto.response.OperationResponseStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -166,36 +171,80 @@ public class AdminController {
     private final CreateVacunaService createVacunaService;
     private final GetVacunaService getVacunaService;
 
+    // Crear una nueva vacuna
     @PostMapping("/vacuna")
     @ResponseStatus(HttpStatus.CREATED)
     private Mono<OperationResponseStatus> createVacuna(@RequestBody @Valid VacunaNewRequest request) {
         return createVacunaService.execute(request);
     }
 
+    // Obtener una vacuna por ID
     @GetMapping("/vacuna/{idVacuna}")
     @ResponseStatus(HttpStatus.OK)
     public Mono<VacunaWithMascotaDetails> findVacunaById(@PathVariable("idVacuna") UUID id) {
         return getVacunaService.findById(id);
     }
 
+    // Listar todas las vacunas
     @GetMapping("/vacuna")
     @ResponseStatus(HttpStatus.OK)
     public Flux<VacunaWithMascotaDetails> findAllVacuna() {
         return getVacunaService.findAll();
     }
 
+    // Filtrar vacunas por tipo
     @GetMapping("/vacuna/filter")
     @ResponseStatus(HttpStatus.OK)
     public Flux<VacunaWithMascotaDetails> filterByTipo(@RequestParam("tipo") String tipo) {
         return getVacunaService.filterByTipo(tipo);
     }
 
+    // Filtrar vacunas por rango de fechas
     @GetMapping("/vacuna/date-range")
     @ResponseStatus(HttpStatus.OK)
     public Flux<VacunaWithMascotaDetails> findByDate(
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         return getVacunaService.findVacunasByDate(startDate, endDate);
+    }
+
+    // ================================
+    // Gestión de Reporte (por Admin)
+    // ================================
+    private final ExportService exportService;
+
+    @GetMapping("/reporte/dueno/{duenoId}")
+    public Mono<Void> exportVacunasByDueno(
+            @PathVariable UUID duenoId,
+            ServerHttpResponse response) {
+
+        response.setStatusCode(HttpStatus.OK);
+        response.getHeaders().setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        response.getHeaders().set(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment; filename=registro_vacunacion_dueno_" + duenoId + ".xlsx");
+
+        return exportService.exportVacunasByDueno(duenoId)
+                .flatMap(bytes -> {
+                    DataBuffer buffer = new DefaultDataBufferFactory().wrap(bytes);
+                    return response.writeWith(Mono.just(buffer));
+                })
+                .then();
+    }
+
+    @GetMapping("/reporte/todos")
+    public Mono<Void> exportAllVacunas(ServerHttpResponse response) {
+
+        response.setStatusCode(HttpStatus.OK);
+        response.getHeaders().setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        response.getHeaders().set(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment; filename=registro_vacunacion_completo.xlsx");
+
+        return exportService.exportAllVacunas()
+                .flatMap(bytes -> {
+                    DataBuffer buffer = new DefaultDataBufferFactory().wrap(bytes);
+                    return response.writeWith(Mono.just(buffer));
+                })
+                .then();
     }
 
 }
