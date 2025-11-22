@@ -65,4 +65,9 @@ public class DuenoRepositoyImpl implements DuenoRepository {
         return duenoJpaRepository.save(duenoMapper.toEntity(dueno)).then();
     }
 
+    @Override
+    public Mono<Long> count() {
+        return duenoJpaRepository.count();
+    }
+
 }

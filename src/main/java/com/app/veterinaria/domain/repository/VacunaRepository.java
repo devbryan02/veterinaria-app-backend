@@ -12,5 +12,9 @@ public interface VacunaRepository {
     Flux<Vacuna> findAll();
     Mono<Boolean> existsByMascotaId(UUID mascotaId);
     Flux<Vacuna> findByMascotaId(UUID mascotaId);
+    Mono<Long> count();
+    Mono<Long> countByMes(int mes);
+    Mono<Long> countByAnio(int anio);
+
 
 }

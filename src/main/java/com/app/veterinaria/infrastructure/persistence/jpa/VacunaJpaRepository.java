@@ -82,4 +82,22 @@ public interface VacunaJpaRepository extends ReactiveCrudRepository<VacunaEntity
 
     Flux<VacunaEntity> findByMascotaId(UUID mascotaId);
 
+    @Query("SELECT COUNT(*) FROM vacuna")
+    Mono<Long> countAllVacunas();
+
+    @Query("""
+    SELECT COUNT(*)
+    FROM vacuna
+    WHERE EXTRACT(MONTH FROM fecha_aplicacion) = :mes
+    """)
+    Mono<Long> countByMes(int mes);
+
+    @Query("""
+    SELECT COUNT(*)
+    FROM vacuna
+    WHERE EXTRACT(YEAR FROM fecha_aplicacion) = :anio
+    """)
+    Mono<Long> countByAnio(int anio);
+
+
 }

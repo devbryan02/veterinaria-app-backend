@@ -12,7 +12,7 @@ import org.mapstruct.Mapping;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface MascotaPageMapper {
+public interface MascotaDetailsMapper {
 
     @Mapping(source = "mascota.id", target = "id")
     @Mapping(source = "mascota.nombre", target = "nombre")
@@ -24,12 +24,10 @@ public interface MascotaPageMapper {
     @Mapping(source = "mascota.color", target = "color")
     @Mapping(source = "mascota.identificador", target = "identificador")
     @Mapping(source = "mascota.estado", target = "estado")
-
     @Mapping(source = "imagenes", target = "imagenList")
     @Mapping(source = "vacunas", target = "vacuna")
     @Mapping(source = "dueno", target = "dueno")
-
-    MascotaPageDetails toDetails(
+    MascotaFullDetails toDetails(
             Mascota mascota,
             DuenoResumen dueno,
             VacunasResumen vacunas,

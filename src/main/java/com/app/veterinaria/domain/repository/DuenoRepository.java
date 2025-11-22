@@ -18,6 +18,7 @@ public interface DuenoRepository {
     Mono<Dueno> findById(UUID id);
     Mono<Void> deleteById(UUID id);
     Mono<Void> update(Dueno dueno);
+    Mono<Long> count();
 
 
 }

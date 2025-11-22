@@ -8,7 +8,7 @@ import com.app.veterinaria.infrastructure.web.dto.details.resume.VacunasResumen;
 import java.time.LocalDate;
 import java.util.List;
 
-public record MascotaPageDetails(
+public record MascotaFullDetails(
         String id,
         String nombre,
         String especie,

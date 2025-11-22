@@ -40,4 +40,19 @@ public class VacunaRepositoryImpl implements VacunaRepository {
     public Flux<Vacuna> findByMascotaId(UUID mascotaId) {
         return vacunaJpaRepository.findByMascotaId(mascotaId).map(mapper::toDomain);
     }
+
+    @Override
+    public Mono<Long> count() {
+        return vacunaJpaRepository.countAllVacunas();
+    }
+
+    @Override
+    public Mono<Long> countByMes(int mes) {
+        return vacunaJpaRepository.countByMes(mes);
+    }
+
+    @Override
+    public Mono<Long> countByAnio(int anio) {
+        return vacunaJpaRepository.countByAnio(anio);
+    }
 }

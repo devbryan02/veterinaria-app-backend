@@ -54,4 +54,24 @@ public class MascotaRepositoryImpl implements MascotaRepository {
     public Flux<Mascota> findByDuenoId(UUID duenoId) {
         return mascotaJpaRepository.findByDuenoId(duenoId).map(mascotaMapper::toDomain);
     }
+
+    @Override
+    public Flux<Mascota> findAll() {
+        return mascotaJpaRepository.findAll().map(mascotaMapper::toDomain);
+    }
+
+    @Override
+    public Mono<Long> count() {
+        return mascotaJpaRepository.count();
+    }
+
+    @Override
+    public Mono<Long> countByEspecie(String especie) {
+        return mascotaJpaRepository.countByEspecie(especie);
+    }
+
+    @Override
+    public Mono<Long> countByAnio(int anio) {
+        return mascotaJpaRepository.countByAnio(anio);
+    }
 }

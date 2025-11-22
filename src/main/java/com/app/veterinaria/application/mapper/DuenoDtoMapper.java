@@ -1,6 +1,7 @@
 package com.app.veterinaria.application.mapper;
 
 import com.app.veterinaria.domain.model.Dueno;
+import com.app.veterinaria.infrastructure.web.dto.details.DuenoFullDetails;
 import com.app.veterinaria.infrastructure.web.dto.request.DuenoNewRequest;
 import com.app.veterinaria.infrastructure.web.dto.request.DuenoUpdateIgnorePasswordAndLocationRequest;
 import com.app.veterinaria.infrastructure.web.dto.request.DuenoUpdateRequest;
@@ -26,4 +27,5 @@ public interface DuenoDtoMapper {
     @Mapping(target = "mascotas", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateDuenoIgnorePasswordAndLocation(DuenoUpdateIgnorePasswordAndLocationRequest request, @MappingTarget Dueno dueno);
+
 }

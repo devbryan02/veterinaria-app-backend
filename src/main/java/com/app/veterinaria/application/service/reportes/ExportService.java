@@ -18,7 +18,7 @@ public class ExportService {
     private final ExcelGeneratorService excelGenerator;
 
     /**
-     * Exporta las vacunas de un dueño específico
+     * Exporta las vacunas de un dueño específico (sin filtrar por año)
      */
     public Mono<byte[]> exportVacunasByDueno(UUID duenoId) {
         Flux<Dueno> duenoFlux = duenoRepository.findById(duenoId).flux();
@@ -26,15 +26,27 @@ public class ExportService {
     }
 
     /**
-     * Exporta las vacunas de todos los dueños
+     * Exporta las vacunas de todos los dueños filtrando por año
      */
-    public Mono<byte[]> exportAllVacunas() {
+    public Mono<byte[]> exportVacunasByYear(int anio) {
         Flux<Dueno> duenosFlux = duenoRepository.findAll();
-        return buildAndGenerateExcel(duenosFlux);
+        return buildAndGenerateExcelByYear(duenosFlux, anio);
     }
 
+    /**
+     * Construye y genera el Excel sin filtro (solo por dueño)
+     */
     private Mono<byte[]> buildAndGenerateExcel(Flux<Dueno> duenosFlux) {
         return dataBuilder.buildExportData(duenosFlux)
+                .collectList()
+                .flatMap(excelGenerator::generateProfessionalExcel);
+    }
+
+    /**
+     * Construye y genera el Excel filtrando por año
+     */
+    private Mono<byte[]> buildAndGenerateExcelByYear(Flux<Dueno> duenosFlux, int anio) {
+        return dataBuilder.buildExportDataByYear(duenosFlux, anio)
                 .collectList()
                 .flatMap(excelGenerator::generateProfessionalExcel);
     }

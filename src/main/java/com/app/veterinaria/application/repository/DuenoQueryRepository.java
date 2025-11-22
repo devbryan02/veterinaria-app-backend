@@ -11,4 +11,5 @@ public interface DuenoQueryRepository {
     Flux<DuenoWithCantMascotaDetails> findAllDueno();
     Mono<DuenoWithCantMascotaDetails> findDuenoById(UUID duenoId);
     Flux<DuenoWithCantMascotaDetails> search(String term);
+
 }

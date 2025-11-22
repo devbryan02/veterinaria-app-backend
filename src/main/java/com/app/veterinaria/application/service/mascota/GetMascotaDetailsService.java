@@ -1,12 +1,11 @@
 package com.app.veterinaria.application.service.mascota;
 
-import com.app.veterinaria.application.mapper.MascotaPageMapper;
+import com.app.veterinaria.application.mapper.MascotaDetailsMapper;
 import com.app.veterinaria.domain.model.Mascota;
 import com.app.veterinaria.domain.repository.DuenoRepository;
 import com.app.veterinaria.domain.repository.ImagenRepository;
 import com.app.veterinaria.domain.repository.MascotaRepository;
 import com.app.veterinaria.domain.repository.VacunaRepository;
-import com.app.veterinaria.infrastructure.persistence.repository.*;
 import com.app.veterinaria.infrastructure.web.dto.details.*;
 import com.app.veterinaria.infrastructure.web.dto.details.resume.DuenoResumen;
 import com.app.veterinaria.infrastructure.web.dto.details.resume.ImagenResumen;
@@ -23,22 +22,22 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class GetMascotaPageDetailsService {
+public class GetMascotaDetailsService {
 
     private final MascotaRepository mascotaRepository;
     private final DuenoRepository duenoRepository;
     private final VacunaRepository vacunaRepository;
     private final ImagenRepository imagenRepository;
-    private final MascotaPageMapper mapper;
+    private final MascotaDetailsMapper mapper;
 
-    public Mono<MascotaPageDetails> execute(UUID mascotaId) {
+    public Mono<MascotaFullDetails> execute(UUID mascotaId) {
 
         return mascotaRepository.findById(mascotaId)
                 .switchIfEmpty(Mono.error(new MascotaNotFoundException("Mascota no encontrada")))
                 .flatMap(this::loadRelations);
     }
 
-    private Mono<MascotaPageDetails> loadRelations(Mascota mascota) {
+    private Mono<MascotaFullDetails> loadRelations(Mascota mascota) {
 
         Mono<DuenoResumen> duenoMono = duenoRepository.findById(mascota.getDueno().getId())
                         .map(mapper::toDuenoResumen);

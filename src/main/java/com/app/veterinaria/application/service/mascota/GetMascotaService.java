@@ -25,7 +25,7 @@ public class GetMascotaService {
                 .doOnNext(m -> log.info("Mascota encontrada: {}", m.nombre()));
     }
 
-    public Flux<MascotaWithDuenoDetails> findAll() {
+    public Flux<MascotaWithDuenoDetails> findAllWithLimit() {
         return mascotaQueryRepository.findAllWithDueno()
                 .doOnSubscribe(sub -> log.info("Listando todas las mascotas"))
                 .doOnComplete(() -> log.info("Listado completado"));

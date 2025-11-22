@@ -15,4 +15,9 @@ public interface MascotaRepository {
     Mono<Mascota> findById(UUID mascotaId);
     Mono<Boolean> existsByDuenoId(UUID duenoId);
     Flux<Mascota> findByDuenoId(UUID duenoId);
+    Flux<Mascota> findAll();
+    Mono<Long> count();
+    Mono<Long> countByEspecie(String especie);
+    Mono<Long> countByAnio(int anio);
+
 }

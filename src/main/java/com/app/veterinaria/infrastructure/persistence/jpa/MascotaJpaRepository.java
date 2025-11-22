@@ -102,4 +102,15 @@ public interface MascotaJpaRepository extends ReactiveCrudRepository<MascotaEnti
 
     Flux<MascotaEntity> findByDuenoId(UUID duenoId);
 
+    @Query("SELECT COUNT(*) FROM mascota WHERE especie = :especie")
+    Mono<Long> countByEspecie(String especie);
+
+    @Query("""
+    SELECT COUNT(*)
+    FROM mascota
+    WHERE EXTRACT(YEAR FROM fecha_creacion) = :anio
+    """)
+    Mono<Long> countByAnio(int anio);
+
+
 }
