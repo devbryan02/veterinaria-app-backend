@@ -1,7 +1,7 @@
 package com.app.veterinaria.application.service.dueno;
 
-import com.app.veterinaria.domain.repository.DuenoRepository;
 import com.app.veterinaria.domain.repository.MascotaRepository;
+import com.app.veterinaria.domain.repository.UsuarioRepository;
 import com.app.veterinaria.infrastructure.web.dto.response.OperationResponseStatus;
 import com.app.veterinaria.shared.exception.dueno.DuenoNotFoundException;
 import com.app.veterinaria.shared.exception.dueno.DuenoWithRelationsException;
@@ -17,29 +17,29 @@ import java.util.UUID;
 @Slf4j
 public class DeleteDuenoService {
 
-    private final DuenoRepository duenoRepository;
+    private final UsuarioRepository usuarioRepository;
     private final MascotaRepository mascotaRepository;
 
-    public Mono<OperationResponseStatus> execute(UUID duenoId) {
-        return validateExistsDueno(duenoId)
-                .then(validateRelations(duenoId))
-                .then(duenoRepository.deleteById(duenoId))
+    public Mono<OperationResponseStatus> execute(UUID usuarioId) {
+        return validateExistsDueno(usuarioId)
+                .then(validateRelations(usuarioId))
+                .then(usuarioRepository.deleteById(usuarioId))
                 .then(Mono.fromCallable(() -> {
-                    log.info("Dueño con id [{}] eliminado correctamente", duenoId);
+                    log.info("Dueño con id [{}] eliminado correctamente", usuarioId);
                     return OperationResponseStatus.ok("Dueño eliminado correctamente");
                 }))
-                .doOnError(error -> log.error("Error al eliminar dueño con id [{}]: {}", duenoId, error.getMessage()));
+                .doOnError(error -> log.error("Error al eliminar dueño con id [{}]: {}", usuarioId, error.getMessage()));
     }
 
-    private Mono<Void> validateExistsDueno(UUID duenoId) {
-        return duenoRepository.existsById(duenoId)
+    private Mono<Void> validateExistsDueno(UUID usuarioId) {
+        return usuarioRepository.existsById(usuarioId)
                 .filter(Boolean::booleanValue)
-                .switchIfEmpty(Mono.error(new DuenoNotFoundException("Dueño con id [" + duenoId + "] no encontrado")))
+                .switchIfEmpty(Mono.error(new DuenoNotFoundException("Dueño con id [" + usuarioId + "] no encontrado")))
                 .then();
     }
 
-    private Mono<Void> validateRelations(UUID duenoId) {
-        return mascotaRepository.existsByDuenoId(duenoId)
+    private Mono<Void> validateRelations(UUID usuarioId) {
+        return mascotaRepository.existsByUsuarioId(usuarioId)
                 .flatMap(hasMascotas -> {
                     if (hasMascotas) {
                         return Mono.error(new DuenoWithRelationsException(

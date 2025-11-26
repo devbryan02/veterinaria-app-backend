@@ -4,6 +4,9 @@ import jakarta.validation.constraints.*;
 
 public record MascotaNewRequest(
 
+        @NotBlank(message = "El id del usuario dueno es obligatorio")
+        String usuarioId,
+
         @NotBlank(message = "El nombre es obligatorio")
         String nombre,
 
@@ -24,9 +27,6 @@ public record MascotaNewRequest(
 
         @NotBlank(message = "El color es obligatorio")
         String color,
-
-        @NotBlank(message = "El id del dueño es obligatorio")
-        String duenoId,
         Integer anios,
 
         @Min(value = 0, message = "Los meses no pueden ser negativos")

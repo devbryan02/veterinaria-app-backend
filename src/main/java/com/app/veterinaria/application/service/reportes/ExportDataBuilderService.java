@@ -1,7 +1,7 @@
 package com.app.veterinaria.application.service.reportes;
 
-import com.app.veterinaria.domain.model.Dueno;
 import com.app.veterinaria.domain.model.Mascota;
+import com.app.veterinaria.domain.model.Usuario;
 import com.app.veterinaria.domain.repository.MascotaRepository;
 import com.app.veterinaria.domain.repository.VacunaRepository;
 import com.app.veterinaria.infrastructure.web.dto.details.export.DuenoExportDTO;
@@ -25,22 +25,22 @@ public class ExportDataBuilderService {
     // -----------------------------------------------------
     //  1) EXPORTACIÓN NORMAL (SIN FILTRO DE AÑO)
     // -----------------------------------------------------
-    public Flux<DuenoExportDTO> buildExportData(Flux<Dueno> duenosFlux) {
-        return duenosFlux.flatMap(this::buildDuenoWithMascotas);
+    public Flux<DuenoExportDTO> buildExportData(Flux<Usuario> usuarioFlux) {
+        return usuarioFlux.flatMap(this::buildDuenoWithMascotas);
     }
 
-    private Mono<DuenoExportDTO> buildDuenoWithMascotas(Dueno dueno) {
-        return mascotaRepository.findByDuenoId(dueno.getId())
+    private Mono<DuenoExportDTO> buildDuenoWithMascotas(Usuario usuario) {
+        return mascotaRepository.findByUsuarioId(usuario.id())
                 .flatMap(this::buildMascotaWithVacunas)
                 .collectList()
-                .map(mascotas -> createDuenoExportDTO(dueno, mascotas));
+                .map(mascotas -> createDuenoExportDTO(usuario, mascotas));
     }
 
     private Mono<MascotaExportDTO> buildMascotaWithVacunas(Mascota mascota) {
-        return vacunaRepository.findByMascotaId(mascota.getId())
+        return vacunaRepository.findByMascotaId(mascota.id())
                 .map(vacuna -> new VacunaExportDTO(
-                        vacuna.getTipo(),
-                        vacuna.getFechaAplicacion()
+                        vacuna.tipo(),
+                        vacuna.fechaAplicacion()
                 ))
                 .collectList()
                 .map(vacunas -> createMascotaExportDTO(mascota, vacunas));
@@ -50,24 +50,24 @@ public class ExportDataBuilderService {
     // -----------------------------------------------------
     //  2) EXPORTACIÓN FILTRADA POR AÑO (SOLO PARA TODOS LOS DUEÑOS)
     // -----------------------------------------------------
-    public Flux<DuenoExportDTO> buildExportDataByYear(Flux<Dueno> duenosFlux, int anio) {
-        return duenosFlux.flatMap(dueno -> buildDuenoWithMascotasByYear(dueno, anio));
+    public Flux<DuenoExportDTO> buildExportDataByYear(Flux<Usuario> usuarioFlux, int anio) {
+        return usuarioFlux.flatMap(usuario -> buildDuenoWithMascotasByYear(usuario, anio));
     }
 
-    private Mono<DuenoExportDTO> buildDuenoWithMascotasByYear(Dueno dueno, int anio) {
-        return mascotaRepository.findByDuenoId(dueno.getId())
+    private Mono<DuenoExportDTO> buildDuenoWithMascotasByYear(Usuario usuario, int anio) {
+        return mascotaRepository.findByUsuarioId(usuario.id())
                 .flatMap(mascota -> buildMascotaWithVacunasByYear(mascota, anio))
                 .collectList()
-                .map(mascotas -> createDuenoExportDTO(dueno, mascotas));
+                .map(mascotas -> createDuenoExportDTO(usuario, mascotas));
     }
 
     private Mono<MascotaExportDTO> buildMascotaWithVacunasByYear(Mascota mascota, int anio) {
-        return vacunaRepository.findByMascotaId(mascota.getId())
-                .filter(vacuna -> vacuna.getFechaAplicacion() != null
-                        && vacuna.getFechaAplicacion().getYear() == anio)
+        return vacunaRepository.findByMascotaId(mascota.id())
+                .filter(vacuna -> vacuna.fechaAplicacion() != null
+                        && vacuna.fechaAplicacion().getYear() == anio)
                 .map(vacuna -> new VacunaExportDTO(
-                        vacuna.getTipo(),
-                        vacuna.getFechaAplicacion()
+                        vacuna.tipo(),
+                        vacuna.fechaAplicacion()
                 ))
                 .collectList()
                 .map(vacunas -> createMascotaExportDTO(mascota, vacunas));
@@ -77,26 +77,26 @@ public class ExportDataBuilderService {
     // -----------------------------------------------------
     //   HELPERS: CREACIÓN DE DTOs
     // -----------------------------------------------------
-    private DuenoExportDTO createDuenoExportDTO(Dueno dueno, List<MascotaExportDTO> mascotas) {
+    private DuenoExportDTO createDuenoExportDTO(Usuario usuario, List<MascotaExportDTO> mascotas) {
         return new DuenoExportDTO(
-                dueno.getId(),
-                dueno.getNombre(),
-                dueno.getDNI(),
-                dueno.getDireccion(),
-                dueno.getTelefono(),
+                usuario.id(),
+                usuario.nombre(),
+                usuario.dni(),
+                usuario.direccion(),
+                usuario.telefono(),
                 mascotas
         );
     }
 
     private MascotaExportDTO createMascotaExportDTO(Mascota mascota, List<VacunaExportDTO> vacunas) {
         return new MascotaExportDTO(
-                mascota.getId(),
-                mascota.getNombre(),
-                mascota.getEspecie(),
-                mascota.getRaza(),
-                mascota.getSexo(),
-                mascota.getColor(),
-                mascota.getAnios() + ", años " + mascota.getMeses() + " meses",
+                mascota.id(),
+                mascota.nombre(),
+                mascota.especie(),
+                mascota.raza(),
+                mascota.sexo().name(),
+                mascota.color(),
+                mascota.anios() + ", años " + mascota.meses() + " meses",
                 vacunas
         );
     }

@@ -1,2 +1,0 @@
-ALTER TABLE mascota
-    ADD COLUMN estado VARCHAR(10);

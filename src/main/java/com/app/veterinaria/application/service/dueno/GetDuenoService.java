@@ -18,10 +18,10 @@ public class GetDuenoService {
 
     private final DuenoQueryRepository duenoQueryRepository;
 
-    public Mono<DuenoWithCantMascotaDetails> findById(UUID duenoId) {
-        return duenoQueryRepository.findDuenoById(duenoId)
+    public Mono<DuenoWithCantMascotaDetails> findById(UUID usuarioId) {
+        return duenoQueryRepository.findDuenoById(usuarioId)
                 .switchIfEmpty(Mono.error(new DuenoNotFoundException("Dueno no encontrado")))
-                .doOnSubscribe(sub -> log.info("Buscando dueno con ID: {}", duenoId))
+                .doOnSubscribe(sub -> log.info("Buscando dueno con ID: {}", usuarioId))
                 .doOnSuccess(d -> log.info("Dueno encontrado: {}", d.nombre()));
     }
 
@@ -32,7 +32,7 @@ public class GetDuenoService {
     }
 
     public Flux<DuenoWithCantMascotaDetails> searchByTerm(String term){
-        return duenoQueryRepository.search(term)
+        return duenoQueryRepository.searchDueno(term)
                 .doOnSubscribe(sub -> log.info("Buscando resultados para: {}", term))
                 .doOnComplete(() -> log.info("Busqueda completada"));
     }

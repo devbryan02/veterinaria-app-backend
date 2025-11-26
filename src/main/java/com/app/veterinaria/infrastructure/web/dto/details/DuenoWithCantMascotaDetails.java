@@ -5,7 +5,7 @@ import java.util.UUID;
 public record DuenoWithCantMascotaDetails(
         UUID id,
         String nombre,
-        String DNI,
+        String dni,
         String direccion,
         String telefono,
         String correo,

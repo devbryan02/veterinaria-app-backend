@@ -1,6 +1,6 @@
 package com.app.veterinaria.application.service.imagen;
 
-import com.app.veterinaria.application.mapper.ImagenDtoMapper;
+import com.app.veterinaria.application.mapper.request.ImagenRequestMapper;
 import com.app.veterinaria.domain.model.Imagen;
 import com.app.veterinaria.domain.repository.ImagenRepository;
 import com.app.veterinaria.domain.repository.MascotaRepository;
@@ -11,10 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
@@ -23,7 +21,7 @@ import java.util.UUID;
 public class CreateImagenService {
 
     private final ImagenUploadService imagenUploadService;
-    private final ImagenDtoMapper imagenDtoMapper;
+    private final ImagenRequestMapper mapper;
     private final ImagenRepository imagenRepository;
     private final MascotaRepository mascotaRepository;
 
@@ -38,7 +36,7 @@ public class CreateImagenService {
                 .flatMap(url -> saveImagen(request, url))
                 .map(saved -> {
                     log.info("Imagen guardada exitosamente con ID: {} para mascota: {}",
-                            saved.getId(), mascotaId);
+                            saved.id(), mascotaId);
                     return OperationResponseStatus.ok("Imagen guardada correctamente");
                 });
     }
@@ -57,10 +55,10 @@ public class CreateImagenService {
     private Mono<Imagen> saveImagen(ImagenNewRequest request, String url) {
         log.debug("Guardando imagen con URL: {}", url);
 
-        Imagen imagen = imagenDtoMapper.toDomain(request);
-        imagen.setUrl(url);
-        imagen.setFechaSubida(LocalDate.now());
-
+        Imagen imagen = mapper.toDomain(
+                request,
+                url
+        );
         return imagenRepository.save(imagen);
     }
 }

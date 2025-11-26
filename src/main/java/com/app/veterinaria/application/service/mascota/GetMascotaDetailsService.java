@@ -1,10 +1,10 @@
 package com.app.veterinaria.application.service.mascota;
 
-import com.app.veterinaria.application.mapper.MascotaDetailsMapper;
+import com.app.veterinaria.application.mapper.response.MascotaResponseMapper;
 import com.app.veterinaria.domain.model.Mascota;
-import com.app.veterinaria.domain.repository.DuenoRepository;
 import com.app.veterinaria.domain.repository.ImagenRepository;
 import com.app.veterinaria.domain.repository.MascotaRepository;
+import com.app.veterinaria.domain.repository.UsuarioRepository;
 import com.app.veterinaria.domain.repository.VacunaRepository;
 import com.app.veterinaria.infrastructure.web.dto.details.*;
 import com.app.veterinaria.infrastructure.web.dto.details.resume.DuenoResumen;
@@ -25,10 +25,10 @@ import java.util.UUID;
 public class GetMascotaDetailsService {
 
     private final MascotaRepository mascotaRepository;
-    private final DuenoRepository duenoRepository;
+    private final UsuarioRepository usuarioRepository;
     private final VacunaRepository vacunaRepository;
     private final ImagenRepository imagenRepository;
-    private final MascotaDetailsMapper mapper;
+    private final MascotaResponseMapper mapper;
 
     public Mono<MascotaFullDetails> execute(UUID mascotaId) {
 
@@ -39,10 +39,10 @@ public class GetMascotaDetailsService {
 
     private Mono<MascotaFullDetails> loadRelations(Mascota mascota) {
 
-        Mono<DuenoResumen> duenoMono = duenoRepository.findById(mascota.getDueno().getId())
+        Mono<DuenoResumen> duenoMono = usuarioRepository.findById(mascota.usuario().id())
                         .map(mapper::toDuenoResumen);
 
-        Mono<VacunasResumen> vacunasMono = vacunaRepository.findByMascotaId(mascota.getId())
+        Mono<VacunasResumen> vacunasMono = vacunaRepository.findByMascotaId(mascota.id())
                         .map(mapper::toVacunaDetalle)
                         .collectList()
                         .map(vacunas -> new VacunasResumen(
@@ -50,7 +50,7 @@ public class GetMascotaDetailsService {
                                 vacunas
                         ));
 
-        Mono<List<ImagenResumen>> imagenesMono = imagenRepository.findByMascotaId(mascota.getId())
+        Mono<List<ImagenResumen>> imagenesMono = imagenRepository.findByMascotaId(mascota.id())
                         .map(mapper::toImagenResumen)
                         .collectList();
 
@@ -66,8 +66,8 @@ public class GetMascotaDetailsService {
     }
 
     private String getEdadString(Mascota mascota) {
-        if (mascota.getAnios() == null || mascota.getMeses() == null) return null;
-        return mascota.getAnios() + " años, " + mascota.getMeses() + " meses";
+        if (mascota.anios() == null || mascota.meses() == null) return null;
+        return mascota.anios() + " años, " + mascota.meses() + " meses";
     }
 
     private String getFotoPrincipal(List<ImagenResumen> imagenes) {

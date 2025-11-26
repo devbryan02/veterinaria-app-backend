@@ -11,10 +11,9 @@ public interface MascotaRepository {
     Mono<Mascota> save(Mascota mascota);
     Mono<Boolean> existsById(UUID mascotaId);
     Mono<Void> deleteById(UUID mascotaId);
-    Mono<Void> update(Mascota mascota);
     Mono<Mascota> findById(UUID mascotaId);
-    Mono<Boolean> existsByDuenoId(UUID duenoId);
-    Flux<Mascota> findByDuenoId(UUID duenoId);
+    Mono<Boolean> existsByUsuarioId(UUID usuarioId);
+    Flux<Mascota> findByUsuarioId(UUID usuarioId);
     Flux<Mascota> findAll();
     Mono<Long> count();
     Mono<Long> countByEspecie(String especie);

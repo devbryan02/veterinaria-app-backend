@@ -1,7 +1,7 @@
 package com.app.veterinaria.application.service.reportes;
 
-import com.app.veterinaria.domain.model.Dueno;
-import com.app.veterinaria.domain.repository.DuenoRepository;
+import com.app.veterinaria.domain.model.Usuario;
+import com.app.veterinaria.domain.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -13,7 +13,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ExportService {
 
-    private final DuenoRepository duenoRepository;
+    private final UsuarioRepository usuarioRepository;
     private final ExportDataBuilderService dataBuilder;
     private final ExcelGeneratorService excelGenerator;
 
@@ -21,23 +21,23 @@ public class ExportService {
      * Exporta las vacunas de un dueño específico (sin filtrar por año)
      */
     public Mono<byte[]> exportVacunasByDueno(UUID duenoId) {
-        Flux<Dueno> duenoFlux = duenoRepository.findById(duenoId).flux();
-        return buildAndGenerateExcel(duenoFlux);
+        Flux<Usuario> usuarioFlux = usuarioRepository.findById(duenoId).flux();
+        return buildAndGenerateExcel(usuarioFlux);
     }
 
     /**
      * Exporta las vacunas de todos los dueños filtrando por año
      */
     public Mono<byte[]> exportVacunasByYear(int anio) {
-        Flux<Dueno> duenosFlux = duenoRepository.findAll();
-        return buildAndGenerateExcelByYear(duenosFlux, anio);
+        Flux<Usuario> usuarioFlux = usuarioRepository.findAll();
+        return buildAndGenerateExcelByYear(usuarioFlux, anio);
     }
 
     /**
      * Construye y genera el Excel sin filtro (solo por dueño)
      */
-    private Mono<byte[]> buildAndGenerateExcel(Flux<Dueno> duenosFlux) {
-        return dataBuilder.buildExportData(duenosFlux)
+    private Mono<byte[]> buildAndGenerateExcel(Flux<Usuario> usuarioFlux) {
+        return dataBuilder.buildExportData(usuarioFlux)
                 .collectList()
                 .flatMap(excelGenerator::generateProfessionalExcel);
     }
@@ -45,8 +45,8 @@ public class ExportService {
     /**
      * Construye y genera el Excel filtrando por año
      */
-    private Mono<byte[]> buildAndGenerateExcelByYear(Flux<Dueno> duenosFlux, int anio) {
-        return dataBuilder.buildExportDataByYear(duenosFlux, anio)
+    private Mono<byte[]> buildAndGenerateExcelByYear(Flux<Usuario> usuarioFlux, int anio) {
+        return dataBuilder.buildExportDataByYear(usuarioFlux, anio)
                 .collectList()
                 .flatMap(excelGenerator::generateProfessionalExcel);
     }

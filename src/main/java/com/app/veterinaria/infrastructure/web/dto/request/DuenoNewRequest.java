@@ -17,7 +17,7 @@ public record DuenoNewRequest(
                 regexp = "^[0-9]{8}$",
                 message = "El DNI debe contener exactamente 8 dígitos numéricos"
         )
-        String DNI,
+        String dni,
 
         @NotBlank(message = "La dirección es obligatoria")
         @Size(min = 5, max = 200, message = "La dirección debe tener entre 5 y 200 caracteres")

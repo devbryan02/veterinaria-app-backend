@@ -1,7 +1,7 @@
 package com.app.veterinaria.application.service.stats;
 
-import com.app.veterinaria.domain.repository.DuenoRepository;
 import com.app.veterinaria.domain.repository.MascotaRepository;
+import com.app.veterinaria.domain.repository.UsuarioRepository;
 import com.app.veterinaria.domain.repository.VacunaRepository;
 import com.app.veterinaria.infrastructure.web.dto.details.stats.DashboardStatsResponse;
 import com.app.veterinaria.infrastructure.web.dto.details.stats.MascotasPorEspecie;
@@ -22,7 +22,7 @@ import java.util.List;
 @Slf4j
 public class DashboardStatsService {
 
-    private final DuenoRepository duenoRepository;
+    private final UsuarioRepository usuarioRepository;
     private final MascotaRepository mascotaRepository;
     private final VacunaRepository vacunaRepository;
 
@@ -31,7 +31,7 @@ public class DashboardStatsService {
         // -------------------------
         // TOTALES
         // -------------------------
-        Mono<Integer> totalDuenosMono = duenoRepository.count().map(Long::intValue);
+        Mono<Integer> totalDuenosMono = usuarioRepository.count().map(Long::intValue);
         Mono<Integer> totalMascotasMono = mascotaRepository.count().map(Long::intValue);
         Mono<Integer> totalVacunasMono = vacunaRepository.count().map(Long::intValue);
 

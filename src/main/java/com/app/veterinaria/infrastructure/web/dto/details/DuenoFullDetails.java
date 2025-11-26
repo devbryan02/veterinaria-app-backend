@@ -4,7 +4,7 @@ import com.app.veterinaria.infrastructure.web.dto.details.resume.MascotaResumen;
 
 public record DuenoFullDetails(
         String nombre,
-        String DNI,
+        String dni,
         String direccion,
         String telefono,
         String correo,

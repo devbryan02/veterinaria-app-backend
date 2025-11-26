@@ -30,5 +30,8 @@ public record MascotaUpdateRequest(
 
         @Min(value = 0, message = "Los meses no pueden ser negativos")
         @Max(value = 11, message = "Los meses deben ser entre 0 y 11")
-        Integer meses
+        Integer meses,
+
+        @NotBlank(message = "El estado es obligatorio")
+        String estado
 ) { }

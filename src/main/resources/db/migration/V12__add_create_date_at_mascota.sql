@@ -1,2 +1,0 @@
-ALTER TABLE mascota
-    ADD COLUMN fecha_creacion DATE DEFAULT CURRENT_DATE;

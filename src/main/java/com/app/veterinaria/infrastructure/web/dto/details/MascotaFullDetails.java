@@ -21,9 +21,7 @@ public record MascotaFullDetails(
         EstadoMascota estado,
         List<ImagenResumen> imagenList,
         DuenoResumen dueno,
-        VacunasResumen vacuna,
-        LocalDate fechaCreacion
-
+        VacunasResumen vacuna
 ) { }
 
 

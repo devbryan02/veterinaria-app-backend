@@ -1,6 +1,6 @@
 package com.app.veterinaria.application.service.vacuna;
 
-import com.app.veterinaria.application.mapper.VacunaDtoMapper;
+import com.app.veterinaria.application.mapper.request.VacunaRequestMapper;
 import com.app.veterinaria.domain.repository.MascotaRepository;
 import com.app.veterinaria.domain.repository.VacunaRepository;
 import com.app.veterinaria.infrastructure.web.dto.request.VacunaNewRequest;
@@ -18,15 +18,15 @@ import java.util.UUID;
 @Slf4j
 public class CreateVacunaService {
 
-    private final VacunaDtoMapper vacunaDtoMapper;
+    private final VacunaRequestMapper mapper;
     private final VacunaRepository vacunaRepository;
     private final MascotaRepository mascotaRepository;
 
     public Mono<OperationResponseStatus> execute(VacunaNewRequest request){
         return validateExistsMascota(UUID.fromString(request.mascotaId()))
-                .then(Mono.fromCallable(() -> vacunaDtoMapper.toDomain(request)))
+                .then(Mono.fromCallable(() -> mapper.toDomain(request)))
                 .flatMap(vacunaRepository::save)
-                .doOnNext(v -> log.info("Vacuna registrado correctamente con id:{}", v.getId()))
+                .doOnNext(v -> log.info("Vacuna registrado correctamente con id:{}", v.id()))
                 .map(saved -> OperationResponseStatus.ok("Vacuna registrado correctamente"));
     }
 

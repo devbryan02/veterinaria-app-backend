@@ -20,7 +20,7 @@ public class GetVacunaService {
 
     public Mono<VacunaWithMascotaDetails> findById(UUID idVacuna) {
         return vacunaQueryRepository.findById(idVacuna)
-                .doOnSubscribe(sub -> log.info("Buscando vacuna con id: " + idVacuna))
+                .doOnSubscribe(sub -> log.info("Buscando vacuna con id: {} ",idVacuna))
                 .doOnNext(v -> log.info("Vacuna encontrada: {}", v.tipo()));
     }
 

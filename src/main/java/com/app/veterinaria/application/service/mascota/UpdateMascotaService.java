@@ -1,8 +1,7 @@
 package com.app.veterinaria.application.service.mascota;
 
-import com.app.veterinaria.application.mapper.MascotaDtoMapper;
+import com.app.veterinaria.application.mapper.request.MascotaRequestMapper;
 import com.app.veterinaria.domain.repository.MascotaRepository;
-import com.app.veterinaria.infrastructure.web.dto.request.MascotaNewRequest;
 import com.app.veterinaria.infrastructure.web.dto.request.MascotaUpdateRequest;
 import com.app.veterinaria.infrastructure.web.dto.response.OperationResponseStatus;
 import com.app.veterinaria.shared.exception.mascota.MascotaNotFoundException;
@@ -19,23 +18,16 @@ import java.util.UUID;
 public class UpdateMascotaService {
 
     private final MascotaRepository mascotaRepository;
-    private final MascotaDtoMapper mascotaDtoMapper;
+    private final MascotaRequestMapper mapper;
 
-    public Mono<OperationResponseStatus> execute(MascotaUpdateRequest mascotaNueva, UUID mascotaId){
-        return validateExistsMascota(mascotaId)
-                .then(mascotaRepository.findById(mascotaId))
-                .doOnNext(existente -> mascotaDtoMapper.updateMascotaFromRequest(mascotaNueva, existente))
-                .flatMap(mascotaRepository::update)
-                .then(Mono.fromCallable(() -> {
-                    log.info("Mascota con id [{}] actualizado.", mascotaId);
-                    return OperationResponseStatus.ok("Mascota actualizado correctamente");
-                }));
-    }
-
-    private Mono<Void> validateExistsMascota(UUID mascotaId) {
-        return mascotaRepository.existsById(mascotaId)
-                .filter(Boolean::booleanValue)
+    public Mono<OperationResponseStatus> execute(MascotaUpdateRequest request, UUID mascotaId){
+        return mascotaRepository.findById(mascotaId)
                 .switchIfEmpty(Mono.error(new MascotaNotFoundException("Mascota no encontrada")))
-                .then();
+                .flatMap(existing -> {
+                    var actualizado = mapper.toUpdate(request, existing);
+                    return mascotaRepository.save(actualizado)
+                            .thenReturn(OperationResponseStatus.ok("Mascota actualizada"));
+                })
+                .doOnSuccess(resp -> log.info("Dueno con id: {} actualizado", mascotaId));
     }
 }

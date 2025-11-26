@@ -1,30 +1,35 @@
 package com.app.veterinaria.infrastructure.persistence.entity;
 
-import com.app.veterinaria.domain.model.Mascota;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
-@AllArgsConstructor
+@Data
+@Builder
 @NoArgsConstructor
-@Getter
-@Setter
+@AllArgsConstructor
 @Table("imagen")
 public class ImagenEntity {
-
     @Id
     private UUID id;
-    private String url;
-    @Column("fecha_subida")
-    private LocalDate fechaSubida;
-    private String descripcion;
+
     @Column("mascota_id")
     private UUID mascotaId;
+
+    private String url;
+    private String descripcion;
+
+    @Builder.Default
+    @Column("fecha_subida")
+    private LocalDate fechaSubida = LocalDate.now();
+
+    @CreatedDate
+    @Column("created_at")
+    private LocalDateTime createdAt;
 }
