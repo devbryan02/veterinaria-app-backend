@@ -1,6 +1,6 @@
-package com.app.veterinaria.application.service.auth;
+package com. app.veterinaria. application. service. auth;
 
-import com.app.veterinaria.domain.model.Rol;
+import com.app.veterinaria.domain.model. Rol;
 import com.app.veterinaria.domain.model.Usuario;
 import com.app.veterinaria.domain.valueobject.AuthToken;
 import com.app.veterinaria.shared.security.jwt.JwtTokenProvider;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
+import java.util. Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,65 +21,61 @@ public class TokenService {
 
     private final JwtTokenProvider jwtTokenProvider;
 
+    /**
+     * Extrae nombres de roles del usuario
+     * Manejo defensivo: si roles es null, devuelve lista vacía
+     */
+    private List<String> extractRoleNames(Usuario usuario) {
+        return usuario. roles() == null
+                ? Collections.emptyList()
+                : usuario.roles().stream()
+                . map(Rol::nombre)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Genera AuthToken (access + refresh) para el usuario
+     * METODO PRINCIPAL - Usado en AuthenticationService
+     */
     public Mono<AuthToken> generateAuthToken(Usuario usuario) {
         return Mono.fromCallable(() -> {
             log.info("Generando tokens para usuario: {}", usuario.correo());
 
-            // Extraer nombres de roles
-            List<String> roles = usuario.roles().stream()
-                    .map(Rol::nombre)
-                    .collect(Collectors.toList());
+            try {
+                List<String> roles = extractRoleNames(usuario);
 
-            // Generar access token
-            String accessToken = jwtTokenProvider.generateToken(usuario.correo(), roles);
+                String accessToken = jwtTokenProvider. generateToken(usuario. correo(), roles);
+                String refreshToken = jwtTokenProvider.generateRefreshToken(usuario.correo());
+                LocalDateTime expiresAt = jwtTokenProvider.getExpirationDateFromToken(accessToken);
 
-            // Generar refresh token
-            String refreshToken = jwtTokenProvider.generateRefreshToken(usuario.correo());
+                log.debug("Tokens generados exitosamente para: {}", usuario.correo());
 
-            // Obtener fecha de expiración
-            LocalDateTime expiresAt = jwtTokenProvider.getExpirationDateFromToken(accessToken);
-
-            log.debug("Tokens generados exitosamente para: {}", usuario.correo());
-
-            return AuthToken.withRefresh(accessToken, refreshToken, expiresAt);
-        });
+                return AuthToken.withRefresh(accessToken, refreshToken, expiresAt);
+            } catch (Exception e) {
+                log.error("Error generando tokens para usuario {}: {}", usuario.correo(), e.getMessage());
+                throw e;
+            }
+        }). doOnError(error -> log.error("Error en generateAuthToken: {}", error. getMessage()));
     }
 
-    public Mono<AuthToken> generateAccessToken(Usuario usuario) {
-        return Mono.fromCallable(() -> {
-            log.debug("Generando access token para usuario: {}", usuario.correo());
-
-            List<String> roles = usuario.roles().stream()
-                    .map(Rol::nombre)
-                    .collect(Collectors.toList());
-
-            String accessToken = jwtTokenProvider.generateToken(usuario.correo(), roles);
-            LocalDateTime expiresAt = jwtTokenProvider.getExpirationDateFromToken(accessToken);
-
-            return AuthToken.of(accessToken, expiresAt);
-        });
-    }
-
+    /**
+     * Valida el token
+     * METODO PRINCIPAL - Usado en AuthenticationService
+     */
     public Mono<Boolean> validateToken(String token) {
         return Mono.fromCallable(() -> jwtTokenProvider.validateToken(token))
                 .onErrorResume(error -> {
                     log.error("Error validando token: {}", error.getMessage());
-                    return Mono.just(false);
+                    return Mono. just(false);
                 });
     }
 
+    /**
+     * Extrae username del token
+     * METODO PRINCIPAL - Usado en AuthenticationService
+     */
     public Mono<String> extractUsername(String token) {
         return Mono.fromCallable(() -> jwtTokenProvider.getUsernameFromToken(token))
-                .doOnError(error -> log.error("Error extrayendo username: {}", error.getMessage()));
-    }
-
-    public Mono<List<String>> extractRoles(String token) {
-        return Mono.fromCallable(() -> jwtTokenProvider.getRolesFromToken(token))
-                .doOnError(error -> log.error("Error extrayendo roles: {}", error.getMessage()));
-    }
-
-    public Mono<Long> getExpirationTime(String token) {
-        return Mono.fromCallable(() -> jwtTokenProvider.getExpirationTimeInMillis(token))
-                .doOnError(error -> log.error("Error obteniendo tiempo de expiración: {}", error.getMessage()));
+                . doOnError(error -> log.error("Error extrayendo username: {}", error. getMessage()));
     }
 }

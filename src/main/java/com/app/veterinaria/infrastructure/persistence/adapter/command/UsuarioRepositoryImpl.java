@@ -64,4 +64,9 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
     public Mono<Long> count() {
         return r2dbcRepository.count();
     }
+
+    @Override
+    public Mono<Usuario> findByCorreo(String correo) {
+        return r2dbcRepository.findByCorreo(correo).map(mapper::toDomain);
+    }
 }

@@ -1,5 +1,6 @@
 package com.app.veterinaria.infrastructure.persistence.adapter.r2dbc;
 
+import com.app.veterinaria.domain.model.Usuario;
 import com.app.veterinaria.infrastructure.persistence.entity.UsuarioEntity;
 import com.app.veterinaria.infrastructure.web.dto.details.DuenoWithCantMascotaDetails;
 import org.springframework.data.r2dbc.repository.Query;

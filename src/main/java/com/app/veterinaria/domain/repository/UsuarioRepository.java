@@ -17,5 +17,6 @@ public interface UsuarioRepository {
     Mono<Usuario> findById(UUID id);
     Mono<Void> deleteById(UUID id);
     Mono<Long> count();
+    Mono<Usuario> findByCorreo(String correo);
 
 }
