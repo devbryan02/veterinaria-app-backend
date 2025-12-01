@@ -26,8 +26,8 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
     }
 
     @Override
-    public Flux<Usuario> findAll() {
-        return r2dbcRepository.findAll().map(mapper::toDomain);
+    public Flux<Usuario> findAllDuenos() {
+        return r2dbcRepository.findAllDuenos().map(mapper::toDomain);
     }
 
     @Override
@@ -61,12 +61,17 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
     }
 
     @Override
-    public Mono<Long> count() {
-        return r2dbcRepository.count();
+    public Mono<Long> countDuenos() {
+        return r2dbcRepository.countAllDuenos();
     }
 
     @Override
     public Mono<Usuario> findByCorreo(String correo) {
         return r2dbcRepository.findByCorreo(correo).map(mapper::toDomain);
+    }
+
+    @Override
+    public Flux<Usuario> findAllVets() {
+        return r2dbcRepository.findAllVets().map(mapper::toDomain);
     }
 }

@@ -5,7 +5,6 @@ import java.util.List;
 
 public record AuthResponse(
         String token,
-        String refreshToken,
         String tokenType,
         LocalDateTime expiresAt,
         UserInfo user
@@ -18,11 +17,10 @@ public record AuthResponse(
     ) {
     }
 
-    public static AuthResponse of(String token, String refreshToken, LocalDateTime expiresAt,
+    public static AuthResponse of(String token, LocalDateTime expiresAt,
                                   String userId, String nombre, String correo, List<String> roles) {
         return new AuthResponse(
                 token,
-                refreshToken,
                 "Bearer",
                 expiresAt,
                 new UserInfo(userId, nombre, correo, roles)

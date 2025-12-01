@@ -9,6 +9,7 @@ import com.app.veterinaria.infrastructure.web.dto.response.OperationResponseStat
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -62,13 +63,14 @@ public class MascotaController {
     @PutMapping("/{id}")
     public Mono<OperationResponseStatus> update(
             @RequestBody @Valid MascotaUpdateRequest request,
-            @PathVariable UUID id
+            @PathVariable UUID id,
+            ServerWebExchange exchange
     ) {
-        return updateMascotaService.execute(request, id);
+        return updateMascotaService.execute(request, id, exchange);
     }
 
     @DeleteMapping("/{id}")
-    public Mono<OperationResponseStatus> delete(@PathVariable UUID id) {
-        return deleteMascotaService.execute(id);
+    public Mono<OperationResponseStatus> delete(@PathVariable UUID id, ServerWebExchange exchange) {
+        return deleteMascotaService.execute(id, exchange);
     }
 }

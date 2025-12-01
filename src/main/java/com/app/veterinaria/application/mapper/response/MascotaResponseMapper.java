@@ -8,10 +8,11 @@ import com.app.veterinaria.infrastructure.web.dto.details.resume.VacunaDetalle;
 import com.app.veterinaria.infrastructure.web.dto.details.resume.VacunasResumen;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface MascotaResponseMapper {
 
     @Mapping(source = "mascota.id", target = "id")
@@ -27,6 +28,7 @@ public interface MascotaResponseMapper {
     @Mapping(source = "imagenes", target = "imagenList")
     @Mapping(source = "vacunas", target = "vacuna")
     @Mapping(source = "dueno", target = "dueno")
+    @Mapping(source = "mascota.createdAt", target = "createdAt")
     MascotaFullDetails toDetails(
             Mascota mascota,
             DuenoResumen dueno,

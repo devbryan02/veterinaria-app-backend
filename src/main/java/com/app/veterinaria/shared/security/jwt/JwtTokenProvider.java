@@ -9,15 +9,11 @@ import org.springframework.security.authentication. ott.InvalidOneTimeTokenExcep
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
 import java.time. Instant;
 import java.time.LocalDateTime;
 import java. time.ZoneId;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.Base64;
 
 @Slf4j
 @Component
@@ -27,8 +23,8 @@ public class JwtTokenProvider {
     private final JwtProperties jwtProperties;
 
     private SecretKey getSigningKey() {
-        byte[] keyBytes = jwtProperties. getSecret().getBytes(StandardCharsets. UTF_8);
-        return Keys.hmacShaKeyFor(keyBytes);
+        byte[] decodedKey = Base64.getDecoder().decode(jwtProperties.getSecret());
+        return Keys.hmacShaKeyFor(decodedKey);
     }
 
     /**
@@ -45,19 +41,6 @@ public class JwtTokenProvider {
         } catch (Exception e) {
             log.error("Error generando token para usuario {}: {}", username, e.getMessage());
             throw new InvalidOneTimeTokenException("No se pudo generar el token");
-        }
-    }
-
-    /**
-     * Genera refresh token
-     */
-    public String generateRefreshToken(String username) {
-        try {
-            log.debug("Generando refresh token para usuario: {}", username);
-            return createToken(new HashMap<>(), username, jwtProperties.getRefreshExpiration());
-        } catch (Exception e) {
-            log.error("Error generando refresh token para usuario {}: {}", username, e.getMessage());
-            throw new InvalidOneTimeTokenException("No se pudo generar el refresh token");
         }
     }
 

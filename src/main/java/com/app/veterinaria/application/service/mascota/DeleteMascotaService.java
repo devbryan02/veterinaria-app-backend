@@ -1,11 +1,14 @@
 package com.app.veterinaria.application.service.mascota;
 
+import com.app.veterinaria.domain.emuns.AccionEnum;
 import com.app.veterinaria.domain.repository.MascotaRepository;
+import com.app.veterinaria.infrastructure.audit.Auditable;
 import com.app.veterinaria.infrastructure.web.dto.response.OperationResponseStatus;
 import com.app.veterinaria.shared.exception.mascota.MascotaNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
@@ -18,7 +21,8 @@ public class DeleteMascotaService {
     private final MascotaRepository mascotaRepository;
     private final ValidateMascotaRelationsService validateMascotaRelationsService;
 
-    public Mono<OperationResponseStatus> execute(UUID mascotaId){
+    @Auditable(action = AccionEnum.DELETE, entity = "MASCOTA")
+    public Mono<OperationResponseStatus> execute(UUID mascotaId, ServerWebExchange exchange){
         return validateExistsMascota(mascotaId)
                 .then(validateMascotaRelationsService.execute(mascotaId))
                 .then(mascotaRepository.deleteById(mascotaId))

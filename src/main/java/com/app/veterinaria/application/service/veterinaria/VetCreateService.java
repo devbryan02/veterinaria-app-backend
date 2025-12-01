@@ -2,11 +2,13 @@ package com.app.veterinaria.application.service.veterinaria;
 
 import com.app.veterinaria.application.mapper.request.VetRequestMapper;
 import com.app.veterinaria.application.service.dueno.ValidationUniquesUsuarioService;
+import com.app.veterinaria.domain.emuns.AccionEnum;
 import com.app.veterinaria.domain.model.Usuario;
 import com.app.veterinaria.domain.model.UsuarioRol;
 import com.app.veterinaria.domain.repository.RolRepository;
 import com.app.veterinaria.domain.repository.UsuarioRepository;
 import com.app.veterinaria.domain.repository.UsuarioRolRepository;
+import com.app.veterinaria.infrastructure.audit.Auditable;
 import com.app.veterinaria.infrastructure.web.dto.request.RegisterRequest;
 import com.app.veterinaria.infrastructure.web.dto.response.OperationResponseStatus;
 import com.app.veterinaria.shared.exception.rol.RolNotFoundException;
@@ -15,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
@@ -34,7 +37,8 @@ public class VetCreateService {
     private static final String VETERNARIA_ROL = "VETERINARIA";
 
     @Transactional
-    public Mono<OperationResponseStatus> execute(RegisterRequest request) {
+    @Auditable(action = AccionEnum.CREATE, entity = "VETERINARIA")
+    public Mono<OperationResponseStatus> execute(RegisterRequest request, ServerWebExchange exchange) {
         return validationUniquesUsuarioService.validateUniqueness(request.dni(), request.telefono(), request.correo())
                 .then(crearUsuarioConRol(request))
                 .doOnSuccess(usuario -> log.info("Usuario registrado con id: {}", usuario.id()))

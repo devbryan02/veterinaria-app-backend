@@ -17,7 +17,7 @@ CREATE TABLE rol
 INSERT INTO rol (nombre, descripcion) VALUES
 ('ADMIN', 'Administrador del sistema'),
 ('DUENO', 'Rol por defecto para usuarios'),
-('VETERINARIO', 'Gestiona mascotas, dueños, vacunas y reportes');
+('VETERINARIA', 'Gestiona mascotas, dueños, vacunas y reportes');
 
 -- =============================================
 -- TABLA: usuario
@@ -145,12 +145,9 @@ CREATE INDEX idx_vacuna_proxima_dosis ON vacuna(proxima_dosis);
 CREATE TABLE auditoria
 (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    usuario_id UUID,
+    usuario_id UUID NULL,
     accion VARCHAR(100) NOT NULL,
     entidad VARCHAR(100) NOT NULL,
-    entidad_id UUID,
-    datos_anteriores JSONB,
-    datos_nuevos JSONB,
     ip_address VARCHAR(45),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -159,7 +156,7 @@ CREATE TABLE auditoria
 );
 
 CREATE INDEX idx_auditoria_usuario ON auditoria(usuario_id);
-CREATE INDEX idx_auditoria_entidad ON auditoria(entidad, entidad_id);
+CREATE INDEX idx_auditoria_entidad ON auditoria(entidad);
 CREATE INDEX idx_auditoria_created_at ON auditoria(created_at DESC);
 CREATE INDEX idx_auditoria_accion ON auditoria(accion);
 

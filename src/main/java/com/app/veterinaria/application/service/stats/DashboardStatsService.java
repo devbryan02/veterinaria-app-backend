@@ -31,7 +31,7 @@ public class DashboardStatsService {
         // -------------------------
         // TOTALES
         // -------------------------
-        Mono<Integer> totalDuenosMono = usuarioRepository.count().map(Long::intValue);
+        Mono<Integer> totalDuenosMono = usuarioRepository.countDuenos().map(Long::intValue);
         Mono<Integer> totalMascotasMono = mascotaRepository.count().map(Long::intValue);
         Mono<Integer> totalVacunasMono = vacunaRepository.count().map(Long::intValue);
 

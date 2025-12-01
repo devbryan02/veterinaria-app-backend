@@ -1,9 +1,8 @@
 package com.app.veterinaria.domain.emuns;
 
 public enum AccionEnum {
-    CREAR,
-    ELIMINAR,
-    ACTUALIZAR,
+    UPDATE,
+    DELETE,
     LOGIN,
-    LOGOUT
+    CREATE
 }

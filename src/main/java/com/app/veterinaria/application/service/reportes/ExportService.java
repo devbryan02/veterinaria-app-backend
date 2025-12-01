@@ -29,7 +29,7 @@ public class ExportService {
      * Exporta las vacunas de todos los dueños filtrando por año
      */
     public Mono<byte[]> exportVacunasByYear(int anio) {
-        Flux<Usuario> usuarioFlux = usuarioRepository.findAll();
+        Flux<Usuario> usuarioFlux = usuarioRepository.findAllDuenos();
         return buildAndGenerateExcelByYear(usuarioFlux, anio);
     }
 

@@ -28,15 +28,13 @@ public class CreateImagenService {
     public Mono<OperationResponseStatus> execute(ImagenNewRequest request, FilePart file) {
         log.info("Iniciando proceso de creación de imagen para mascota: {}", request.mascotaId());
 
-        UUID mascotaId = UUID.fromString(request.mascotaId());
-
         // Flujo: Validar mascota → Subir imagen → Guardar en BD
-        return validateExistsMascota(mascotaId)
+        return validateExistsMascota(UUID.fromString(request.mascotaId()))
                 .then(imagenUploadService.upload(file))
                 .flatMap(url -> saveImagen(request, url))
                 .map(saved -> {
                     log.info("Imagen guardada exitosamente con ID: {} para mascota: {}",
-                            saved.id(), mascotaId);
+                            saved.id(), request.mascotaId());
                     return OperationResponseStatus.ok("Imagen guardada correctamente");
                 });
     }

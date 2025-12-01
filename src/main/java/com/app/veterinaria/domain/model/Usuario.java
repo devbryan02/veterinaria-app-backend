@@ -90,5 +90,24 @@ public record Usuario(
         );
     }
 
-
+    public Usuario conCuentaBloqueada(Boolean cuentaNoBloqueada){
+        return new Usuario(
+                this.id,
+                this.nombre(),
+                this.correo(),
+                this.passwordHash,
+                this.telefono(),
+                this.dni(),
+                this.direccion(),
+                this.latitud,
+                this.longitud,
+                this.activo,
+                this.cuentaNoExpirada,
+                cuentaNoBloqueada,
+                this.credencialesNoExpiradas,
+                this.createdAt,
+                LocalDateTime.now(),
+                this.roles
+        );
+    }
 }

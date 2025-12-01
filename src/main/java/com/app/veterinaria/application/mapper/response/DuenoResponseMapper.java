@@ -6,10 +6,11 @@ import com.app.veterinaria.infrastructure.web.dto.details.DuenoFullDetails;
 import com.app.veterinaria.infrastructure.web.dto.details.resume.MascotaDetalle;
 import com.app.veterinaria.infrastructure.web.dto.details.resume.MascotaResumen;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface DuenoResponseMapper {
 
     DuenoFullDetails toDetails(Usuario usuario, MascotaResumen mascota);

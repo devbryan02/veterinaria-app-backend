@@ -39,8 +39,8 @@ public class GetMascotaDetailsService {
 
     private Mono<MascotaFullDetails> loadRelations(Mascota mascota) {
 
-        Mono<DuenoResumen> duenoMono = usuarioRepository.findById(mascota.usuario().id())
-                        .map(mapper::toDuenoResumen);
+        Mono<DuenoResumen> duenoMono = usuarioRepository.findById(mascota.usuarioId())
+                        .map(mapper::toDuenoResumen).doOnNext(dueno -> log.info("Dueno encontrado: {}", dueno.nombre()));
 
         Mono<VacunasResumen> vacunasMono = vacunaRepository.findByMascotaId(mascota.id())
                         .map(mapper::toVacunaDetalle)

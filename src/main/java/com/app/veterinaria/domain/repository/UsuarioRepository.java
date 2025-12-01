@@ -9,14 +9,15 @@ import java.util.UUID;
 public interface UsuarioRepository {
 
     Mono<Usuario> save(Usuario usuario);
-    Flux<Usuario> findAll();
+    Flux<Usuario> findAllDuenos();
     Mono<Boolean> existsByCorreo(String correo);
     Mono<Boolean> existsByTelefono(String telefono);
     Mono<Boolean> existsByDNI(String DNI);
     Mono<Boolean> existsById(UUID id);
     Mono<Usuario> findById(UUID id);
     Mono<Void> deleteById(UUID id);
-    Mono<Long> count();
+    Mono<Long> countDuenos();
     Mono<Usuario> findByCorreo(String correo);
+    Flux<Usuario> findAllVets();
 
 }

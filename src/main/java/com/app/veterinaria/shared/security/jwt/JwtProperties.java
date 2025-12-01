@@ -12,6 +12,5 @@ import org.springframework.context.annotation.Configuration;
 public class JwtProperties {
 
     private String secret;
-    private Long expiration = 86400000L;
-    private Long refreshExpiration = 604800000L;
+    private Long expiration;
 }

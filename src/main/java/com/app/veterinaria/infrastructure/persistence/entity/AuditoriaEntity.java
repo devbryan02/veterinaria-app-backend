@@ -27,16 +27,8 @@ public class AuditoriaEntity {
     private UUID usuarioId;
 
     private AccionEnum accion;
+
     private String entidad;
-
-    @Column("entidad_id")
-    private UUID entidadId;
-
-    @Column("datos_anteriores")
-    private String datosAnteriores;
-
-    @Column("datos_nuevos")
-    private String datosNuevos;
 
     @Column("ip_address")
     private String ipAddress;

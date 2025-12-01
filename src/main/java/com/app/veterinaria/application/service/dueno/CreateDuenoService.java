@@ -1,11 +1,13 @@
 package com.app.veterinaria.application.service.dueno;
 
 import com.app.veterinaria.application.mapper.request.DuenoRequestMapper;
+import com.app.veterinaria.domain.emuns.AccionEnum;
 import com.app.veterinaria.domain.model.Usuario;
 import com.app.veterinaria.domain.model.UsuarioRol;
 import com.app.veterinaria.domain.repository.RolRepository;
 import com.app.veterinaria.domain.repository.UsuarioRepository;
 import com.app.veterinaria.domain.repository.UsuarioRolRepository;
+import com.app.veterinaria.infrastructure.audit.Auditable;
 import com.app.veterinaria.infrastructure.web.dto.request.DuenoNewRequest;
 import com.app.veterinaria.infrastructure.web.dto.response.OperationResponseStatus;
 import com.app.veterinaria.shared.exception.rol.RolNotFoundException;

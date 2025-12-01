@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
  */
 public record AuthToken(
         String token,
-        String refreshToken,
         LocalDateTime expiresAt,
         String tokenType
 ) {
@@ -20,17 +19,7 @@ public record AuthToken(
         }
     }
 
-    /**
-     * Constructor simplificado sin refresh token
-     */
     public static AuthToken of(String token, LocalDateTime expiresAt) {
-        return new AuthToken(token, null, expiresAt, "Bearer");
-    }
-
-    /**
-     * Constructor completo con refresh token
-     */
-    public static AuthToken withRefresh(String token, String refreshToken, LocalDateTime expiresAt) {
-        return new AuthToken(token, refreshToken, expiresAt, "Bearer");
+        return new AuthToken(token, expiresAt, "Bearer");
     }
 }

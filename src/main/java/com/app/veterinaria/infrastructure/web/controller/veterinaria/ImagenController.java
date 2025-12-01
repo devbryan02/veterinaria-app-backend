@@ -19,10 +19,10 @@ public class ImagenController {
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Mono<OperationResponseStatus> upload(
             @RequestPart("file") FilePart file,
-            @RequestPart("descripcion") String descripcion,
-            @RequestPart("mascotaId") String mascotaId
+            @RequestPart("mascotaId") String mascotaId,
+            @RequestPart("descripcion") String descripcion
     ) {
-        ImagenNewRequest request = new ImagenNewRequest(descripcion, mascotaId);
+        ImagenNewRequest request = new ImagenNewRequest(mascotaId, descripcion);
         return createImagenService.execute(request, file);
     }
 }

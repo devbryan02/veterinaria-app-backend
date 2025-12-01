@@ -35,32 +35,29 @@ public class TokenService {
 
     /**
      * Genera AuthToken (access + refresh) para el usuario
-     * METODO PRINCIPAL - Usado en AuthenticationService
      */
     public Mono<AuthToken> generateAuthToken(Usuario usuario) {
         return Mono.fromCallable(() -> {
-            log.info("Generando tokens para usuario: {}", usuario.correo());
+            log.info("Generando token para usuario: {}", usuario.correo());
 
             try {
                 List<String> roles = extractRoleNames(usuario);
 
-                String accessToken = jwtTokenProvider. generateToken(usuario. correo(), roles);
-                String refreshToken = jwtTokenProvider.generateRefreshToken(usuario.correo());
+                String accessToken = jwtTokenProvider.generateToken(usuario.correo(), roles);
                 LocalDateTime expiresAt = jwtTokenProvider.getExpirationDateFromToken(accessToken);
 
-                log.debug("Tokens generados exitosamente para: {}", usuario.correo());
+                log.debug("Token generado exitosamente para: {}", usuario.correo());
 
-                return AuthToken.withRefresh(accessToken, refreshToken, expiresAt);
+                return AuthToken.of(accessToken, expiresAt);
             } catch (Exception e) {
-                log.error("Error generando tokens para usuario {}: {}", usuario.correo(), e.getMessage());
+                log.error("Error generando token para usuario {}: {}", usuario.correo(), e.getMessage());
                 throw e;
             }
-        }). doOnError(error -> log.error("Error en generateAuthToken: {}", error. getMessage()));
+        }).doOnError(error -> log.error("Error en generateAuthToken: {}", error.getMessage()));
     }
 
     /**
      * Valida el token
-     * METODO PRINCIPAL - Usado en AuthenticationService
      */
     public Mono<Boolean> validateToken(String token) {
         return Mono.fromCallable(() -> jwtTokenProvider.validateToken(token))
@@ -72,7 +69,6 @@ public class TokenService {
 
     /**
      * Extrae username del token
-     * METODO PRINCIPAL - Usado en AuthenticationService
      */
     public Mono<String> extractUsername(String token) {
         return Mono.fromCallable(() -> jwtTokenProvider.getUsernameFromToken(token))

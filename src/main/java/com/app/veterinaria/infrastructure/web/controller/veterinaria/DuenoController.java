@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -55,13 +56,14 @@ public class DuenoController {
     @PutMapping("/{id}")
     public Mono<OperationResponseStatus> update(
             @RequestBody @Valid DuenoUpdateRequest request,
-            @PathVariable UUID id
+            @PathVariable UUID id,
+            ServerWebExchange exchange
     ) {
-        return updateDuenoService.execute(request, id);
+        return updateDuenoService.execute(request, id, exchange);
     }
 
     @DeleteMapping("/{id}")
-    public Mono<OperationResponseStatus> delete(@PathVariable UUID id) {
-        return deleteDuenoService.execute(id);
+    public Mono<OperationResponseStatus> delete(@PathVariable UUID id, ServerWebExchange exchange) {
+        return deleteDuenoService.execute(id, exchange);
     }
 }

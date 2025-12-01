@@ -21,6 +21,7 @@ public class GetDuenoDetailsService {
     private final MascotaRepository mascotaRepository;
     private final DuenoResponseMapper mapper;
 
+
     public Mono<DuenoFullDetails> execute(UUID usuarioId) {
 
         return usuarioRepository.findById(usuarioId)

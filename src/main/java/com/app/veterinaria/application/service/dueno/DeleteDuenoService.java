@@ -1,13 +1,16 @@
 package com.app.veterinaria.application.service.dueno;
 
+import com.app.veterinaria.domain.emuns.AccionEnum;
 import com.app.veterinaria.domain.repository.MascotaRepository;
 import com.app.veterinaria.domain.repository.UsuarioRepository;
+import com.app.veterinaria.infrastructure.audit.Auditable;
 import com.app.veterinaria.infrastructure.web.dto.response.OperationResponseStatus;
 import com.app.veterinaria.shared.exception.dueno.DuenoNotFoundException;
 import com.app.veterinaria.shared.exception.dueno.DuenoWithRelationsException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
@@ -20,7 +23,8 @@ public class DeleteDuenoService {
     private final UsuarioRepository usuarioRepository;
     private final MascotaRepository mascotaRepository;
 
-    public Mono<OperationResponseStatus> execute(UUID usuarioId) {
+    @Auditable(action = AccionEnum.DELETE, entity = "DUENO")
+    public Mono<OperationResponseStatus> execute(UUID usuarioId, ServerWebExchange exchange) {
         return validateExistsDueno(usuarioId)
                 .then(validateRelations(usuarioId))
                 .then(usuarioRepository.deleteById(usuarioId))

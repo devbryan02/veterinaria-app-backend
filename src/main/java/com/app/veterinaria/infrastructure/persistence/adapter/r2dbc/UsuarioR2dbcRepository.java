@@ -1,6 +1,5 @@
 package com.app.veterinaria.infrastructure.persistence.adapter.r2dbc;
 
-import com.app.veterinaria.domain.model.Usuario;
 import com.app.veterinaria.infrastructure.persistence.entity.UsuarioEntity;
 import com.app.veterinaria.infrastructure.web.dto.details.DuenoWithCantMascotaDetails;
 import org.springframework.data.r2dbc.repository.Query;
@@ -16,6 +15,30 @@ public interface UsuarioR2dbcRepository extends R2dbcRepository<UsuarioEntity, U
     Mono<Boolean> existsByCorreo(String correo);
     Mono<Boolean> existsByDni(String dni);
     Mono<Boolean> existsByTelefono(String telefono);
+
+    @Query("""
+    SELECT COUNT(*) FROM usuario u
+    LEFT JOIN usuario_rol ur ON u.id = ur.usuario_id
+    LEFT JOIN rol r ON ur.rol_id = r.id
+    WHERE r.nombre = 'DUENO'
+    """)
+    Mono<Long> countAllDuenos();
+
+    @Query("""
+    SELECT * FROM usuario u
+    LEFT JOIN usuario_rol ur ON u.id = ur.usuario_id
+    LEFT JOIN rol r ON ur.rol_id = r.id
+    WHERE r.nombre = 'DUENO'
+    """)
+    Flux<UsuarioEntity> findAllDuenos();
+
+    @Query("""
+    SELECT * FROM usuario u
+    LEFT JOIN usuario_rol ur ON u.id = ur.usuario_id
+    LEFT JOIN rol r ON ur.rol_id = r.id
+    WHERE r.nombre = 'VETERINARIA'
+    """)
+    Flux<UsuarioEntity> findAllVets();
 
     // Buscar usuario por correo
     Mono<UsuarioEntity> findByCorreo(String correo);
