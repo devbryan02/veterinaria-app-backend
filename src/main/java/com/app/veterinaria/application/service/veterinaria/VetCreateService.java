@@ -3,6 +3,7 @@ package com.app.veterinaria.application.service.veterinaria;
 import com.app.veterinaria.application.mapper.request.VetRequestMapper;
 import com.app.veterinaria.application.service.dueno.ValidationUniquesUsuarioService;
 import com.app.veterinaria.domain.emuns.AccionEnum;
+import com.app.veterinaria.domain.emuns.EntityEnum;
 import com.app.veterinaria.domain.model.Usuario;
 import com.app.veterinaria.domain.model.UsuarioRol;
 import com.app.veterinaria.domain.repository.RolRepository;
@@ -37,7 +38,7 @@ public class VetCreateService {
     private static final String VETERNARIA_ROL = "VETERINARIA";
 
     @Transactional
-    @Auditable(action = AccionEnum.CREATE, entity = "VETERINARIA")
+    @Auditable(action = AccionEnum.CREATE, entity = EntityEnum.VETERINARIA)
     public Mono<OperationResponseStatus> execute(RegisterRequest request, ServerWebExchange exchange) {
         return validationUniquesUsuarioService.validateUniqueness(request.dni(), request.telefono(), request.correo())
                 .then(crearUsuarioConRol(request))

@@ -54,4 +54,14 @@ public class VacunaRepositoryImpl implements VacunaRepository {
     public Mono<Long> countByAnio(int anio) {
         return r2dbcRepository.countByAnio(anio);
     }
+
+    @Override
+    public Mono<Vacuna> findById(UUID id) {
+        return r2dbcRepository.findById(id).map(mapper::toDomain);
+    }
+
+    @Override
+    public Mono<Void> deleteById(UUID id) {
+        return r2dbcRepository.deleteById(id);
+    }
 }

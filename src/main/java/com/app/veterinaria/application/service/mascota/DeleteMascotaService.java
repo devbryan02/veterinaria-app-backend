@@ -1,6 +1,7 @@
 package com.app.veterinaria.application.service.mascota;
 
 import com.app.veterinaria.domain.emuns.AccionEnum;
+import com.app.veterinaria.domain.emuns.EntityEnum;
 import com.app.veterinaria.domain.repository.MascotaRepository;
 import com.app.veterinaria.infrastructure.audit.Auditable;
 import com.app.veterinaria.infrastructure.web.dto.response.OperationResponseStatus;
@@ -21,7 +22,7 @@ public class DeleteMascotaService {
     private final MascotaRepository mascotaRepository;
     private final ValidateMascotaRelationsService validateMascotaRelationsService;
 
-    @Auditable(action = AccionEnum.DELETE, entity = "MASCOTA")
+    @Auditable(action = AccionEnum.DELETE, entity = EntityEnum.MASCOTA)
     public Mono<OperationResponseStatus> execute(UUID mascotaId, ServerWebExchange exchange){
         return validateExistsMascota(mascotaId)
                 .then(validateMascotaRelationsService.execute(mascotaId))

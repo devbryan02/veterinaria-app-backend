@@ -15,6 +15,8 @@ public interface VacunaRepository {
     Mono<Long> count();
     Mono<Long> countByMes(int mes);
     Mono<Long> countByAnio(int anio);
+    Mono<Vacuna> findById(UUID id);
+    Mono<Void> deleteById(UUID id);
 
 
 }

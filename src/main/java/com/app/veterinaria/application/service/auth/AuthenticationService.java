@@ -3,6 +3,7 @@ package com.app. veterinaria.application.service. auth;
 import com.app. veterinaria.application.repository.AuthQueryRepository;
 import com.app. veterinaria.application.service.veterinaria.VetCreateService;
 import com.app.veterinaria.domain.emuns.AccionEnum;
+import com.app.veterinaria.domain.emuns.EntityEnum;
 import com.app. veterinaria.domain.model. Rol;
 import com.app. veterinaria.domain.model. Usuario;
 import com.app. veterinaria.domain.valueobject.AuthCredentials;
@@ -49,7 +50,6 @@ public class AuthenticationService {
                 .collect(Collectors. toList());
     }
 
-    @Auditable(action = AccionEnum.LOGIN, entity = "AUTH")
     public Mono<AuthResponse> login(LoginRequest loginRequest, ServerWebExchange exchange) {
         log.info("Iniciando proceso de login para: {}", loginRequest.correo());
 
@@ -68,7 +68,7 @@ public class AuthenticationService {
                 );
     }
 
-    @Auditable(action = AccionEnum.CREATE, entity = "VETERINARIA")
+    @Auditable(action = AccionEnum.CREATE, entity = EntityEnum.VETERINARIA)
     public Mono<OperationResponseStatus> register(RegisterRequest registerRequest, ServerWebExchange exchange) {
         log.info("Iniciando proceso de registro para: {}", registerRequest.correo());
         return vetCreateService.crearUsuarioConRol(registerRequest)

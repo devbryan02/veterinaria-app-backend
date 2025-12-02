@@ -2,6 +2,7 @@ package com.app.veterinaria.application.service.mascota;
 
 import com.app.veterinaria.application.mapper.request.MascotaRequestMapper;
 import com.app.veterinaria.domain.emuns.AccionEnum;
+import com.app.veterinaria.domain.emuns.EntityEnum;
 import com.app.veterinaria.domain.repository.MascotaRepository;
 import com.app.veterinaria.infrastructure.audit.Auditable;
 import com.app.veterinaria.infrastructure.web.dto.request.MascotaUpdateRequest;
@@ -23,7 +24,7 @@ public class UpdateMascotaService {
     private final MascotaRepository mascotaRepository;
     private final MascotaRequestMapper mapper;
 
-    @Auditable(action = AccionEnum.UPDATE, entity = "MASCOTA")
+    @Auditable(action = AccionEnum.UPDATE, entity = EntityEnum.MASCOTA)
     public Mono<OperationResponseStatus> execute(MascotaUpdateRequest request, UUID mascotaId, ServerWebExchange exchange){
         return mascotaRepository.findById(mascotaId)
                 .switchIfEmpty(Mono.error(new MascotaNotFoundException("Mascota no encontrada")))

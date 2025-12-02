@@ -12,7 +12,6 @@ public interface UsuarioMapper {
 
     UsuarioEntity toEntity(Usuario domain);
 
-    @Mapping(target = "roles", ignore = true)
     Usuario toDomain(UsuarioEntity entity);
 
 }

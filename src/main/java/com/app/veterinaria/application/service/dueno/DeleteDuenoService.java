@@ -1,6 +1,7 @@
 package com.app.veterinaria.application.service.dueno;
 
 import com.app.veterinaria.domain.emuns.AccionEnum;
+import com.app.veterinaria.domain.emuns.EntityEnum;
 import com.app.veterinaria.domain.repository.MascotaRepository;
 import com.app.veterinaria.domain.repository.UsuarioRepository;
 import com.app.veterinaria.infrastructure.audit.Auditable;
@@ -23,7 +24,7 @@ public class DeleteDuenoService {
     private final UsuarioRepository usuarioRepository;
     private final MascotaRepository mascotaRepository;
 
-    @Auditable(action = AccionEnum.DELETE, entity = "DUENO")
+    @Auditable(action = AccionEnum.DELETE, entity = EntityEnum.DUENO)
     public Mono<OperationResponseStatus> execute(UUID usuarioId, ServerWebExchange exchange) {
         return validateExistsDueno(usuarioId)
                 .then(validateRelations(usuarioId))

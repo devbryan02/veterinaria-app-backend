@@ -1,6 +1,7 @@
 package com.app.veterinaria.application.service.veterinaria;
 
 import com.app.veterinaria.domain.emuns.AccionEnum;
+import com.app.veterinaria.domain.emuns.EntityEnum;
 import com.app.veterinaria.domain.repository.UsuarioRepository;
 import com.app.veterinaria.infrastructure.audit.Auditable;
 import com.app.veterinaria.infrastructure.web.dto.response.OperationResponseStatus;
@@ -20,7 +21,7 @@ public class ToggleAccountVetService {
 
     private final UsuarioRepository usuarioRepository;
 
-    @Auditable(action = AccionEnum.UPDATE, entity = "VETERINARIA")
+    @Auditable(action = AccionEnum.UPDATE, entity = EntityEnum.VETERINARIA)
     public Mono<OperationResponseStatus> toggle(UUID usuarioId, ServerWebExchange exchange) {
         return usuarioRepository.findById(usuarioId)
                 .switchIfEmpty(Mono.error(new UsuarioNotFoundException("Usuario no encontrado")))

@@ -1,6 +1,7 @@
 package com.app.veterinaria.domain.model;
 
 import com.app.veterinaria.domain.valueobject.VacunaDataCreate;
+import com.app.veterinaria.domain.valueobject.VacunaDataUpdate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -31,6 +32,23 @@ public record Vacuna(
                 fechaVencimientoCalc,
                 proximaDosisCalc,
                 LocalDateTime.now()
+        );
+    }
+
+    public Vacuna actualizar(VacunaDataUpdate data){
+
+        LocalDate fechaVencimientoCalc = data.fechaAplicacion().plusMonths(data.mesesVigencia());
+        LocalDate proximaDosisCalc = fechaVencimientoCalc.minusMonths(1);
+
+        return new Vacuna(
+                this.id,
+                this.mascotaId,
+                data.tipo(),
+                data.fechaAplicacion(),
+                data.mesesVigencia(),
+                fechaVencimientoCalc,
+                proximaDosisCalc,
+                this.createdAt
         );
     }
 }

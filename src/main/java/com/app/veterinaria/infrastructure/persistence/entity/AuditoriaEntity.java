@@ -1,6 +1,7 @@
 package com.app.veterinaria.infrastructure.persistence.entity;
 
 import com.app.veterinaria.domain.emuns.AccionEnum;
+import com.app.veterinaria.domain.emuns.EntityEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,7 +29,7 @@ public class AuditoriaEntity {
 
     private AccionEnum accion;
 
-    private String entidad;
+    private EntityEnum entidad;
 
     @Column("ip_address")
     private String ipAddress;
