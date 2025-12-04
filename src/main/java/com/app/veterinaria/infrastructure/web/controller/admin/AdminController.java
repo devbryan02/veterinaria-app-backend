@@ -5,12 +5,9 @@ import com.app.veterinaria.application.service.veterinaria.ToggleAccountVetServi
 import com.app.veterinaria.application.service.veterinaria.GetVetsService;
 import com.app.veterinaria.infrastructure.web.dto.details.VetInfoTable;
 import com.app.veterinaria.infrastructure.web.dto.request.RegisterRequest;
-import com.app.veterinaria.infrastructure.web.dto.response.AuthResponse;
 import com.app.veterinaria.infrastructure.web.dto.response.OperationResponseStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
