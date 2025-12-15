@@ -95,18 +95,15 @@ public class ImagenUploadService {
     }
 
     // ================= UPLOAD OPTIMIZADO =================
-
     private Mono<String> uploadToCloudinary(byte[] fileBytes) {
         return Mono.fromCallable(() -> {
 
-            // Transformación FUERTEMENTE optimizada
             Transformation<?> transformation = new Transformation<>()
                     .width(MAX_WIDTH)
                     .height(MAX_HEIGHT)
-                    .crop("limit")                 // no deforma
-                    .quality("auto:good")          // compresión inteligente
-                    .fetchFormat("auto")           // WebP / AVIF
-                    .flags("strip_metadata");      // elimina EXIF/GPS
+                    .crop("limit")
+                    .quality("auto:good")
+                    .fetchFormat("auto");
 
             var result = cloudinary.uploader().upload(
                     fileBytes,
@@ -120,4 +117,5 @@ public class ImagenUploadService {
             return result.get("secure_url").toString();
         }).subscribeOn(Schedulers.boundedElastic());
     }
+
 }
