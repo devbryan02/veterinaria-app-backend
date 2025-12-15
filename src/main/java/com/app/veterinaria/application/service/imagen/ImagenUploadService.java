@@ -21,7 +21,11 @@ public class ImagenUploadService {
 
     private static final String UPLOAD_FOLDER = "images_mascotas";
     private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-    private static final List<String> ALLOWED_TYPES = List.of("image/jpeg", "image/png", "image/jpg", "image/webp");
+    private static final int MAX_WIDTH = 1024; // límite de ancho
+    private static final int MAX_HEIGHT = 1024; // límite de alto
+
+    private static final List<String> ALLOWED_TYPES =
+            List.of("image/jpeg", "image/png", "image/jpg", "image/webp");
 
     private final Cloudinary cloudinary;
 
@@ -43,26 +47,34 @@ public class ImagenUploadService {
         return validateFile(filePart)
                 .flatMap(this::convertToBytes)
                 .flatMap(this::uploadToCloudinary)
-                .doOnSuccess(url -> log.info("Imagen subida exitosamente: {}", url))
-                .doOnError(e -> log.error("Error al subir imagen: {}", e.getMessage(), e));
+                .doOnSuccess(url -> log.info("Imagen subida y optimizada: {}", url))
+                .doOnError(e -> log.error("Error al subir imagen", e));
     }
 
-    // Validaciones del archivo
+    // ================= VALIDACIONES =================
+
     private Mono<FilePart> validateFile(FilePart filePart) {
         String filename = filePart.filename();
         String contentType = filePart.headers().getContentType() != null
                 ? Objects.requireNonNull(filePart.headers().getContentType()).toString().toLowerCase()
                 : null;
 
-        if (filename.isBlank()) return Mono.error(new IllegalArgumentException("El archivo debe tener un nombre válido"));
+        if (filename.isBlank()) {
+            return Mono.error(new IllegalArgumentException("El archivo debe tener un nombre válido"));
+        }
 
-        if (contentType == null || !ALLOWED_TYPES.contains(contentType)) return Mono.error(new IllegalArgumentException("Tipo de archivo no permitido. Solo JPEG, PNG, JPG o WEBP"));
+        if (contentType == null || !ALLOWED_TYPES.contains(contentType)) {
+            return Mono.error(new IllegalArgumentException(
+                    "Tipo de archivo no permitido (JPEG, PNG, JPG, WEBP)"
+            ));
+        }
 
         log.info("Archivo validado: {} [{}]", filename, contentType);
         return Mono.just(filePart);
     }
 
-    // Convertir FilePart a bytes de forma reactiva
+    // ================= CONVERSIÓN A BYTES =================
+
     private Mono<byte[]> convertToBytes(FilePart filePart) {
         return filePart.content()
                 .publishOn(Schedulers.boundedElastic())
@@ -77,28 +89,35 @@ public class ImagenUploadService {
                 .map(ByteArrayOutputStream::toByteArray)
                 .doOnNext(bytes -> {
                     if (bytes.length > MAX_FILE_SIZE) {
-                        throw new RuntimeException("El archivo excede los 5MB permitidos");
+                        throw new IllegalArgumentException("La imagen excede los 5MB permitidos");
                     }
                 });
     }
 
-    //Subir a Cloudinary
+    // ================= UPLOAD OPTIMIZADO =================
+
     private Mono<String> uploadToCloudinary(byte[] fileBytes) {
         return Mono.fromCallable(() -> {
-                    Transformation<?> transform = new Transformation<>()
-                            .quality("auto")
-                            .fetchFormat("auto");
 
-                    var result = cloudinary.uploader().upload(
-                            fileBytes,
-                            Map.of(
-                                    "folder", UPLOAD_FOLDER,
-                                    "resource_type", "image",
-                                    "transformation", transform
-                            )
-                    );
-                    return result.get("secure_url").toString();
-                })
-                .subscribeOn(Schedulers.boundedElastic());
+            // Transformación FUERTEMENTE optimizada
+            Transformation<?> transformation = new Transformation<>()
+                    .width(MAX_WIDTH)
+                    .height(MAX_HEIGHT)
+                    .crop("limit")                 // no deforma
+                    .quality("auto:good")          // compresión inteligente
+                    .fetchFormat("auto")           // WebP / AVIF
+                    .flags("strip_metadata");      // elimina EXIF/GPS
+
+            var result = cloudinary.uploader().upload(
+                    fileBytes,
+                    Map.of(
+                            "folder", UPLOAD_FOLDER,
+                            "resource_type", "image",
+                            "transformation", transformation
+                    )
+            );
+
+            return result.get("secure_url").toString();
+        }).subscribeOn(Schedulers.boundedElastic());
     }
 }
