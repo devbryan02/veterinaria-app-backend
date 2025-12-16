@@ -12,7 +12,8 @@ public record Imagen(
         String url,
         String descripcion,
         LocalDate fechaSubida,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        String publicId
 ) {
 
     public static Imagen nuevo(ImagenDataCreate data){
@@ -22,7 +23,8 @@ public record Imagen(
                 data.url(),
                 data.descripcion(),
                 LocalDate.now(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                data.publicId()
         );
     }
 }

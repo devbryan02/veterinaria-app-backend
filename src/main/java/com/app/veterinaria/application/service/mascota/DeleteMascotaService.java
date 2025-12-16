@@ -1,5 +1,6 @@
 package com.app.veterinaria.application.service.mascota;
 
+import com.app.veterinaria.application.service.imagen.DeleteImageService;
 import com.app.veterinaria.domain.emuns.AccionEnum;
 import com.app.veterinaria.domain.emuns.EntityEnum;
 import com.app.veterinaria.domain.repository.MascotaRepository;
@@ -21,11 +22,13 @@ public class DeleteMascotaService {
 
     private final MascotaRepository mascotaRepository;
     private final ValidateMascotaRelationsService validateMascotaRelationsService;
+    private final DeleteImageService deleteImageService;
 
     @Auditable(action = AccionEnum.DELETE, entity = EntityEnum.MASCOTA)
     public Mono<OperationResponseStatus> execute(UUID mascotaId, ServerWebExchange exchange){
         return validateExistsMascota(mascotaId)
                 .then(validateMascotaRelationsService.execute(mascotaId))
+                .then(deleteImageService.execute(mascotaId))
                 .then(mascotaRepository.deleteById(mascotaId))
                 .then(Mono.fromCallable(() -> {
                     log.info("Mascota con id [{}] eliminado", mascotaId);

@@ -10,11 +10,12 @@ import java.util.UUID;
 @Component
 public class ImagenRequestMapper {
 
-    public Imagen toDomain(ImagenNewRequest request, String url) {
+    public Imagen toDomain(ImagenNewRequest request, String url, String publicId) {
         var data = new ImagenDataCreate(
                 UUID.fromString(request.mascotaId()),
                 url,
-                request.descripcion()
+                request.descripcion(),
+                publicId
         );
         return Imagen.nuevo(data);
     }

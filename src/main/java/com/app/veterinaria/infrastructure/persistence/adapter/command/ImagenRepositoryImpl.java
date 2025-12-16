@@ -39,4 +39,19 @@ public class ImagenRepositoryImpl implements ImagenRepository {
     public Flux<Imagen> findByMascotaId(UUID mascotaId) {
         return r2dbcRepository.findByMascotaId(mascotaId).map(imagenMapper::toDomain);
     }
+
+    @Override
+    public Mono<Void> deleteByMascotaId(UUID id) {
+        return r2dbcRepository.deleteAllByMascotaId(id);
+    }
+
+    @Override
+    public Mono<Imagen> findById(UUID id) {
+        return r2dbcRepository.findById(id).map(imagenMapper::toDomain);
+    }
+
+    @Override
+    public Mono<Void> deleteById(UUID id) {
+        return r2dbcRepository.deleteById(id);
+    }
 }

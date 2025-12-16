@@ -32,4 +32,7 @@ public class ImagenEntity {
     @CreatedDate
     @Column("created_at")
     private LocalDateTime createdAt;
+
+    @Column("public_id")
+    String publicId;
 }

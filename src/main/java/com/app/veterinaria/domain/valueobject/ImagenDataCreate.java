@@ -5,5 +5,6 @@ import java.util.UUID;
 public record ImagenDataCreate(
     UUID mascotaId,
     String url,
-    String descripcion
+    String descripcion,
+    String publicId
 ) { }

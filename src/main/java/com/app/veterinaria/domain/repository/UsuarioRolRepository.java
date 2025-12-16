@@ -11,5 +11,6 @@ public interface UsuarioRolRepository {
     Mono<UsuarioRol> save(UsuarioRol usuarioRol);
     Mono<Void> deleteByUsuarioIdAndRolId(UUID usuarioId, UUID rolId);
     Flux<UsuarioRol> findByUsuarioId(UUID usuarioId);
+    Mono<Long> countByRolName(String rolName);
     Mono<Boolean> existsByUsuarioIdAndRolId(UUID usuarioId, UUID rolId);
 }

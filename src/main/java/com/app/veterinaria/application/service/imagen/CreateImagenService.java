@@ -4,6 +4,7 @@ import com.app.veterinaria.application.mapper.request.ImagenRequestMapper;
 import com.app.veterinaria.domain.model.Imagen;
 import com.app.veterinaria.domain.repository.ImagenRepository;
 import com.app.veterinaria.domain.repository.MascotaRepository;
+import com.app.veterinaria.domain.valueobject.CloudinaryUploadResult;
 import com.app.veterinaria.infrastructure.web.dto.request.ImagenNewRequest;
 import com.app.veterinaria.infrastructure.web.dto.response.OperationResponseStatus;
 import com.app.veterinaria.shared.exception.mascota.MascotaNotFoundException;
@@ -26,37 +27,35 @@ public class CreateImagenService {
     private final MascotaRepository mascotaRepository;
 
     public Mono<OperationResponseStatus> execute(ImagenNewRequest request, FilePart file) {
-        log.info("Iniciando proceso de creación de imagen para mascota: {}", request.mascotaId());
 
-        // Flujo: Validar mascota → Subir imagen → Guardar en BD
-        return validateExistsMascota(UUID.fromString(request.mascotaId()))
+        UUID mascotaId = UUID.fromString(request.mascotaId());
+
+        return validateExistsMascota(mascotaId)
                 .then(imagenUploadService.upload(file))
-                .flatMap(url -> saveImagen(request, url))
-                .map(saved -> {
-                    log.info("Imagen guardada exitosamente con ID: {} para mascota: {}",
-                            saved.id(), request.mascotaId());
-                    return OperationResponseStatus.ok("Imagen guardada correctamente");
-                });
+                .flatMap(result -> saveImagen(request, result))
+                .map(saved -> OperationResponseStatus.ok("Imagen guardada correctamente"));
     }
 
     private Mono<Void> validateExistsMascota(UUID mascotaId) {
-        log.debug("Verificando existencia de mascota con ID: {}", mascotaId);
-
         return mascotaRepository.existsById(mascotaId)
-                .filter(exists -> exists)
+                .filter(Boolean::booleanValue)
                 .switchIfEmpty(Mono.error(
-                        new MascotaNotFoundException("Mascota no encontrada con id: " + mascotaId)
+                        new MascotaNotFoundException("Mascota no encontrada: " + mascotaId)
                 ))
                 .then();
     }
 
-    private Mono<Imagen> saveImagen(ImagenNewRequest request, String url) {
-        log.debug("Guardando imagen con URL: {}", url);
+    private Mono<Imagen> saveImagen(
+            ImagenNewRequest request,
+            CloudinaryUploadResult result
+    ) {
 
         Imagen imagen = mapper.toDomain(
                 request,
-                url
+                result.url(),
+                result.publicId()
         );
+
         return imagenRepository.save(imagen);
     }
 }

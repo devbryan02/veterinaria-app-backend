@@ -1,5 +1,6 @@
 package com.app.veterinaria.application.service.imagen;
 
+import com.app.veterinaria.domain.valueobject.CloudinaryUploadResult;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.Transformation;
 import lombok.extern.slf4j.Slf4j;
@@ -20,9 +21,9 @@ import java.util.Objects;
 public class ImagenUploadService {
 
     private static final String UPLOAD_FOLDER = "images_mascotas";
-    private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-    private static final int MAX_WIDTH = 1024; // límite de ancho
-    private static final int MAX_HEIGHT = 1024; // límite de alto
+    private static final long MAX_FILE_SIZE = 5 * 1024 * 1024;
+    private static final int MAX_WIDTH = 1024;
+    private static final int MAX_HEIGHT = 1024;
 
     private static final List<String> ALLOWED_TYPES =
             List.of("image/jpeg", "image/png", "image/jpg", "image/webp");
@@ -39,16 +40,15 @@ public class ImagenUploadService {
                 "api_key", apiKey,
                 "api_secret", apiSecret
         ));
-        log.info("Cloudinary inicializado correctamente");
     }
 
-    public Mono<String> upload(FilePart filePart) {
-        log.info("Iniciando upload: {}", filePart.filename());
+    public Mono<CloudinaryUploadResult> upload(FilePart filePart) {
         return validateFile(filePart)
                 .flatMap(this::convertToBytes)
                 .flatMap(this::uploadToCloudinary)
-                .doOnSuccess(url -> log.info("Imagen subida y optimizada: {}", url))
-                .doOnError(e -> log.error("Error al subir imagen", e));
+                .doOnSuccess(r ->
+                        log.info("Imagen subida: publicId={}, url={}", r.publicId(), r.url())
+                );
     }
 
     // ================= VALIDACIONES =================
@@ -56,46 +56,44 @@ public class ImagenUploadService {
     private Mono<FilePart> validateFile(FilePart filePart) {
         String filename = filePart.filename();
         String contentType = filePart.headers().getContentType() != null
-                ? Objects.requireNonNull(filePart.headers().getContentType()).toString().toLowerCase()
+                ? filePart.headers().getContentType().toString().toLowerCase()
                 : null;
 
         if (filename.isBlank()) {
-            return Mono.error(new IllegalArgumentException("El archivo debe tener un nombre válido"));
+            return Mono.error(new IllegalArgumentException("Nombre de archivo inválido"));
         }
 
         if (contentType == null || !ALLOWED_TYPES.contains(contentType)) {
-            return Mono.error(new IllegalArgumentException(
-                    "Tipo de archivo no permitido (JPEG, PNG, JPG, WEBP)"
-            ));
+            return Mono.error(new IllegalArgumentException("Tipo de imagen no permitido"));
         }
 
-        log.info("Archivo validado: {} [{}]", filename, contentType);
         return Mono.just(filePart);
     }
 
-    // ================= CONVERSIÓN A BYTES =================
+    // ================= BYTES =================
 
     private Mono<byte[]> convertToBytes(FilePart filePart) {
         return filePart.content()
                 .publishOn(Schedulers.boundedElastic())
-                .reduce(new ByteArrayOutputStream(), (baos, dataBuffer) -> {
+                .reduce(new ByteArrayOutputStream(), (baos, buffer) -> {
                     try {
-                        baos.write(dataBuffer.asInputStream().readAllBytes());
+                        baos.write(buffer.asInputStream().readAllBytes());
                         return baos;
-                    } catch (IOException e) {
-                        throw new RuntimeException("Error al leer el archivo", e);
+                    } catch (Exception e) {
+                        throw new RuntimeException("Error leyendo archivo", e);
                     }
                 })
                 .map(ByteArrayOutputStream::toByteArray)
                 .doOnNext(bytes -> {
                     if (bytes.length > MAX_FILE_SIZE) {
-                        throw new IllegalArgumentException("La imagen excede los 5MB permitidos");
+                        throw new IllegalArgumentException("La imagen supera 5MB");
                     }
                 });
     }
 
-    // ================= UPLOAD OPTIMIZADO =================
-    private Mono<String> uploadToCloudinary(byte[] fileBytes) {
+    // ================= CLOUDINARY =================
+
+    private Mono<CloudinaryUploadResult> uploadToCloudinary(byte[] bytes) {
         return Mono.fromCallable(() -> {
 
             Transformation<?> transformation = new Transformation<>()
@@ -105,8 +103,8 @@ public class ImagenUploadService {
                     .quality("auto:good")
                     .fetchFormat("auto");
 
-            var result = cloudinary.uploader().upload(
-                    fileBytes,
+            Map<String, Object> result = cloudinary.uploader().upload(
+                    bytes,
                     Map.of(
                             "folder", UPLOAD_FOLDER,
                             "resource_type", "image",
@@ -114,8 +112,12 @@ public class ImagenUploadService {
                     )
             );
 
-            return result.get("secure_url").toString();
+            return new CloudinaryUploadResult(
+                    result.get("secure_url").toString(),
+                    result.get("public_id").toString()
+            );
+
         }).subscribeOn(Schedulers.boundedElastic());
     }
-
 }
+

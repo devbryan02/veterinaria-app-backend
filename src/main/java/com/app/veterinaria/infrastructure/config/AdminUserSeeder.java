@@ -16,6 +16,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 @Slf4j
@@ -27,44 +28,50 @@ public class AdminUserSeeder {
     private final RolRepository rolRepository;
     private final UsuarioRolRepository usuarioRolRepository;
     private final PasswordEncoder passwordEncoder;
+    private final Random random = new Random();
 
-    @Value("${admin.email:admin@veterinaria.com}")
+    @Value("${admin.email:}")
     private String adminEmail;
 
-    @Value("${admin.password:admin123}")
+    @Value("${admin.password:}")
     private String adminPassword;
 
     @Bean
-    public CommandLineRunner seedAdminUser() {
+    public CommandLineRunner seedAdmins() {
         return args -> {
-            log.info("Verificando usuario administrador...");
+            // Validar que existan credenciales
+            if (adminEmail == null || adminEmail.isBlank() ||
+                    adminPassword == null || adminPassword.isBlank()) {
+                log.info("No hay credenciales de admin configuradas en variables de entorno.");
+                return;
+            }
 
-            usuarioRepository.findByCorreo(adminEmail)
-                    .flatMap(existingUser -> {
-                        log.info("Usuario administrador ya existe: {}", adminEmail);
-                        return Mono.empty();
-                    })
-                    .switchIfEmpty(
-                            Mono.defer(() -> {
-                                log.info("Creando usuario administrador...");
-                                return createAdminUser();
-                            })
-                    )
-                    .doOnError(error -> log.error("❌ Error: {}", error.getMessage()))
-                    .onErrorResume(e -> Mono.empty())
+            crearAdminSiNoExiste()
+                    .doOnError(e -> log.error("Error creando usuario ADMIN", e))
                     .block();
         };
     }
 
-    private Mono<Void> createAdminUser() {
-        Usuario admin = new Usuario(
+    private Mono<Void> crearAdminSiNoExiste() {
+        return usuarioRepository.findByCorreo(adminEmail)
+                .flatMap(existing -> {
+                    log.info("Usuario admin {} ya existe. Se omite creación.", adminEmail);
+                    return Mono.empty();
+                })
+                .switchIfEmpty(crearAdmin())
+                .then();
+    }
+
+    private Mono<Void> crearAdmin() {
+
+        Usuario usuario = new Usuario(
                 null,
-                "Administrador del Sistema",
+                "Administrador",
                 adminEmail,
                 passwordEncoder.encode(adminPassword),
-                "999999999",
-                "00000000",
-                "Oficina Central",
+                generarTelefono(),
+                generarDni(),
+                "Central Admin",
                 null,
                 null,
                 true,
@@ -76,19 +83,43 @@ public class AdminUserSeeder {
                 List.of()
         );
 
-        return usuarioRepository.save(admin)
-                .doOnSuccess(user -> log.info("Usuario creado: {}", user.correo()))
-                .flatMap(user -> asignarRolAdmin(user.id()))
+        return usuarioRepository.save(usuario)
+                .flatMap(saved -> asignarRolAdmin(saved.id()))
+                .doOnSuccess(v -> log.info("Usuario ADMIN creado exitosamente: {}", adminEmail))
+                .onErrorResume(org.springframework.dao.DuplicateKeyException.class, e -> {
+                    log.warn("El usuario {} ya existe en BD (clave duplicada). Se omite.", adminEmail);
+                    return Mono.empty();
+                })
                 .then();
     }
 
     private Mono<Void> asignarRolAdmin(UUID usuarioId) {
         return rolRepository.findByNombre("ADMIN")
                 .flatMap(rol -> {
-                    UsuarioRol usuarioRol = new UsuarioRol(null, usuarioId, rol.id(), LocalDateTime.now());
+                    UsuarioRol usuarioRol = new UsuarioRol(
+                            null,
+                            usuarioId,
+                            rol.id(),
+                            LocalDateTime.now()
+                    );
                     return usuarioRolRepository.save(usuarioRol);
                 })
-                .doOnSuccess(ur -> log.info("Rol ADMIN asignado"))
+                .doOnSuccess(v -> log.info("Rol ADMIN asignado correctamente"))
                 .then();
+    }
+
+    /**
+     * Genera un teléfono móvil
+     */
+    private String generarTelefono() {
+        int numero = 10_000_000 + random.nextInt(90_000_000);
+        return "9" + numero;
+    }
+
+    /**
+     * Genera un DNI peruano válido
+     */
+    private String generarDni() {
+        return String.valueOf(10_000_000 + random.nextInt(90_000_000));
     }
 }

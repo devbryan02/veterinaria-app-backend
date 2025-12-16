@@ -36,6 +36,11 @@ public class UsuarioRolRepositoryImpl implements UsuarioRolRepository {
     }
 
     @Override
+    public Mono<Long> countByRolName(String rolName) {
+        return r2dbcRepository.countByRolNombre(rolName);
+    }
+
+    @Override
     public Mono<Boolean> existsByUsuarioIdAndRolId(UUID usuarioId, UUID rolId) {
         return r2dbcRepository.existsByUsuarioIdAndRolId(usuarioId, rolId);
     }

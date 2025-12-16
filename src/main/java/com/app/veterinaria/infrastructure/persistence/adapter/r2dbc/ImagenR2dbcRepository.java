@@ -1,6 +1,7 @@
 package com.app.veterinaria.infrastructure.persistence.adapter.r2dbc;
 
 import com.app.veterinaria.infrastructure.persistence.entity.ImagenEntity;
+import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -13,4 +14,6 @@ public interface ImagenR2dbcRepository extends R2dbcRepository<ImagenEntity, UUI
 
     Flux<ImagenEntity> findByMascotaId(UUID mascotaId);
 
+
+    Mono<Void> deleteAllByMascotaId(UUID mascotaId);
 }
