@@ -22,7 +22,7 @@ reportes exportables a Excel, con control de acceso por roles.
 
 ## Screenshots
 
-[Dashboard](docs/demo.png)
+![Dashboard](src/docs/demo.png)
 
 ## Características principales
 
