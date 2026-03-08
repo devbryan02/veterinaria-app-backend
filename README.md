@@ -1,274 +1,139 @@
-# Veterinaria API Backend
+# Veterinaria API – Municipalidad A.A. Cáceres Dorregaray
 
-API REST para gestión de clínicas veterinarias construida con Spring Boot 3, Spring WebFlux y arquitectura hexagonal.
+API REST reactiva desarrollada para la gestión del control sanitario de mascotas
+de la Municipalidad Andrés Avelino Cáceres Dorregaray de Ayacucho.
+Construida con Spring WebFlux, Arquitectura Hexagonal y desplegada en producción.
 
-## Tabla de Contenidos
+![Java](https://img.shields.io/badge/Java_17-ED8B00?style=for-the-badge&logo=java&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot_3-6DB33F?style=for-the-badge&logo=spring&logoColor=white)
+![Spring WebFlux](https://img.shields.io/badge/Spring_WebFlux-6DB33F?style=for-the-badge&logo=spring&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Railway](https://img.shields.io/badge/Railway-0B0D0E?style=for-the-badge&logo=railway&logoColor=white)
 
-- [Tecnologías](#tecnologías)
-- [Requisitos Previos](#requisitos-previos)
-- [Instalación](#instalación)
-- [Estructura del Proyecto](#estructura-del-proyecto)
-- [Arquitectura](#arquitectura)
-- [Base de Datos](#base-de-datos)
-- [Seguridad](#seguridad)
-- [Documentación API](#documentación-api)
+## Contexto
 
-## Tecnologías
+Este sistema fue desarrollado para la Municipalidad A.A. Cáceres Dorregaray
+con el objetivo de digitalizar y centralizar el registro sanitario de mascotas
+del distrito. Permite gestionar dueños, mascotas, vacunas, imágenes y generar
+reportes exportables a Excel, con control de acceso por roles.
 
-### Core
-- **Spring Boot 3** - Framework principal
-- **Spring WebFlux** - Programación reactiva
-- **R2DBC** - Acceso reactivo a base de datos
-- **Java 17+** - Lenguaje de programación
+> **Deployado en producción** con Docker + Railway
 
-### Seguridad
-- **Spring Security** - Autenticación y autorización
-- **JWT** - JSON Web Tokens para sesiones
-- **BCrypt** - Encriptación de contraseñas
+## Screenshots
 
-### Base de Datos
-- **PostgreSQL** - Base de datos relacional
-- **Flyway** - Migraciones de base de datos
-- **R2DBC PostgreSQL** - Driver reactivo
+<!-- Agrega tus screenshots aquí -->
+<!-- ![Dashboard](docs/screenshots/dashboard.png) -->
 
-### Utilidades
-- **Apache POI** - Generación de archivos Excel
-- **Lombok** - Reducción de código boilerplate
-- **MapStruct** (opcional) - Mapeo de objetos
+## Características principales
 
-## Requisitos Previos
+- ✅ API REST reactiva con **15 endpoints** (mascotas, dueños, vacunas, imágenes, reportes)
+- ✅ **Arquitectura Hexagonal + CQRS** — separación limpia de lectura/escritura
+- ✅ Autenticación **JWT** con roles Admin y Veterinaria
+- ✅ **Auditoría automática con AOP** — registra todas las operaciones CRUD
+- ✅ Reportes exportables a **Excel** con Apache POI
+- ✅ Migraciones automáticas con **Flyway**
+- ✅ Perfiles separados **dev/prod**
 
-- **JDK**: 17 o superior
-- **Maven**: 3.8+ o usa el wrapper incluido (`./mvnw`)
-- **PostgreSQL**: 14+
-- **Git**: Para control de versiones
+## 🛠️ Stack Tecnológico
 
-## Instalación
+| Categoría | Tecnología |
+|---|---|
+| Framework | Spring Boot 3 + Spring WebFlux |
+| Base de datos | PostgreSQL + R2DBC (reactivo) |
+| Seguridad | Spring Security + JWT + BCrypt |
+| Arquitectura | Hexagonal + CQRS |
+| Auditoría | AOP con anotación @Auditable |
+| Migraciones | Flyway |
+| Deploy | Docker + Railway |
+
+## Arquitectura Hexagonal
+```
+src/main/java/com/app/veterinaria/
+├── domain/          # Núcleo — entidades, ports, value objects
+├── application/     # Casos de uso — servicios, CQRS queries
+├── infrastructure/  # Adaptadores — REST controllers, R2DBC, AOP
+└── shared/          # Seguridad, excepciones, configuración global
+```
+
+**Flujo de datos:**
+```
+HTTP Request → Controller (Infrastructure)
+            → Service (Application)
+            → Repository Port (Domain)
+            → R2DBC Adapter (Infrastructure)
+            → PostgreSQL
+```
+
+## Seguridad
+
+| Rol | Permisos |
+|---|---|
+| ADMIN | Gestión de veterinarios + acceso total |
+| VET | Gestión de mascotas, dueños y vacunas |
+
+Autenticación via JWT con access token + refresh token.
+
+## Endpoints principales
+```
+# Auth
+POST   /api/auth/login
+POST   /api/auth/register
+
+# Dashboard
+GET    /api/dashboard/stats
+
+# Dueños
+GET    /api/duenos
+POST   /api/duenos
+GET    /api/duenos/{id}
+PUT    /api/duenos/{id}
+DELETE /api/duenos/{id}
+
+# Mascotas
+GET    /api/mascotas
+POST   /api/mascotas
+GET    /api/mascotas/{id}
+PUT    /api/mascotas/{id}
+DELETE /api/mascotas/{id}
+
+# Vacunas
+GET    /api/vacunas
+POST   /api/vacunas
+PUT    /api/vacunas/{id}
+DELETE /api/vacunas/{id}
+
+# Reportes
+GET    /api/reportes/export     # Exportar Excel
+```
+
+## Instalación local
 
 ### 1. Clonar el repositorio
-
 ```bash
-git clone [URL_DEL_REPOSITORIO]
+git clone https://github.com/devbryan02/veterinaria-app-backend
 cd veterinaria-app-backend
 ```
 
 ### 2. Configurar base de datos
-
-Crea una base de datos PostgreSQL:
-
 ```sql
 CREATE DATABASE veterinaria_db;
 ```
 
 ### 3. Configurar variables de entorno
-
-Edita `src/main/resources/application.yml` o crea variables de entorno:
-
 ```yaml
 spring:
   r2dbc:
     url: r2dbc:postgresql://localhost:5432/veterinaria_db
     username: tu_usuario
     password: tu_password
-```
 
-### 4. Compilar y ejecutar
-
-```bash
-# Con Maven wrapper (recomendado)
-./mvnw clean install
-./mvnw spring-boot:run
-
-# O con Maven instalado
-mvn clean install
-mvn spring-boot:run
-```
-
-La API estará disponible en `http://localhost:8080`
-
-## Estructura del Proyecto
-
-El proyecto sigue **Arquitectura Hexagonal** (Ports & Adapters):
-
-```
-src/main/java/com/app/veterinaria/
-├── application/              # Capa de Aplicación
-│   ├── mapper/              # Mappers request/response
-│   │   ├── request/
-│   │   └── response/
-│   ├── repository/          # Ports (interfaces) de queries
-│   └── service/             # Casos de uso
-│       ├── auth/           # Autenticación
-│       ├── dueno/          # Gestión de dueños
-│       ├── mascota/        # Gestión de mascotas
-│       ├── vacuna/         # Gestión de vacunas
-│       ├── reportes/       # Generación de reportes
-│       └── stats/          # Estadísticas
-│
-├── domain/                  # Capa de Dominio (Core)
-│   ├── emuns/              # Enumeraciones
-│   ├── model/              # Entidades de dominio
-│   ├── repository/         # Ports (interfaces) de repositorios
-│   └── valueobject/        # Value Objects
-│
-├── infrastructure/          # Capa de Infraestructura (Adapters)
-│   ├── audit/              # Sistema de auditoría (AOP)
-│   ├── config/             # Configuraciones
-│   ├── mapper/             # Mappers entity <-> domain
-│   ├── persistence/        # Adaptador de persistencia
-│   │   ├── adapter/
-│   │   │   ├── command/   # Write operations
-│   │   │   ├── query/     # Read operations (CQRS)
-│   │   │   └── r2dbc/     # Repositorios R2DBC
-│   │   └── entity/        # Entidades JPA
-│   └── web/               # Adaptador REST
-│       ├── controller/
-│       │   ├── admin/
-│       │   ├── auth/
-│       │   └── veterinaria/
-│       └── dto/
-│           ├── details/
-│           ├── request/
-│           └── response/
-│
-├── shared/                  # Código compartido
-│   ├── config/             # Configuraciones globales (CORS, R2DBC)
-│   ├── exception/          # Excepciones personalizadas
-│   └── security/           # Configuración de seguridad
-│       ├── config/
-│       ├── jwt/            # JWT Provider y filtros
-│       └── userdetails/
-│
-└── VeterinariaAppApplication.java
-```
-
-## Arquitectura
-
-### Hexagonal Architecture (Clean Architecture)
-
-La aplicación se organiza en 3 capas principales:
-
-**1. Domain (Núcleo)**
-- Entidades de negocio puras
-- Interfaces de repositorio (ports)
-- Value Objects
-- Sin dependencias externas
-
-**2. Application (Casos de Uso)**
-- Servicios de aplicación
-- Orquestación de lógica de negocio
-- Interfaces de queries (CQRS)
-
-**3. Infrastructure (Adaptadores)**
-- Implementaciones de repositorios (R2DBC)
-- Controllers REST
-- Configuración de frameworks
-- Adaptadores externos
-
-### CQRS Pattern
-
-Separación de operaciones de lectura y escritura:
-
-- **Commands**: `adapter/command/` - Operaciones de escritura
-- **Queries**: `adapter/query/` - Operaciones de lectura optimizadas
-
-### Programación Reactiva
-
-Uso de Spring WebFlux y R2DBC para operaciones no bloqueantes:
-
-```java
-public Mono<Mascota> save(Mascota mascota);
-public Flux<MascotaDetails> findAll();
-```
-
-## Base de Datos
-
-### Migraciones
-
-Las migraciones se gestionan con Flyway en `src/main/resources/db/migration/`:
-
-```
-V1__init_schema.sql          # Schema inicial
-V2__generate_dim_mascota.sql # Funciones adicionales
-```
-
-### Auditoría
-
-Sistema de auditoría automática con AOP:
-
-- Registra todas las operaciones CRUD
-- Almacena usuario, acción, entidad y timestamp
-- Usa la anotación `@Auditable`
-
-```java
-@Auditable(accion = AccionEnum.CREATE, entidad = EntityEnum.MASCOTA)
-public Mono<Mascota> create(MascotaDataCreate data) { ... }
-```
-
-## Seguridad
-
-### Autenticación JWT
-
-- Login en `/api/auth/login`
-- Token JWT con expiración configurable
-- Refresh token para renovación
-
-### Roles y Permisos
-
-- **ADMIN**: Gestión de veterinarios
-- **VET**: Gestión de mascotas, dueños y vacunas
-
-### Configuración
-
-En `application.yml`:
-
-```yaml
 jwt:
   secret: tu_secret_key
-  expiration: 86400000  # 24 horas en ms
+  expiration: 86400000
 ```
 
-## Documentación API
-
-La documentación completa de endpoints está en `src/docs/api/`:
-
-- `auth-api.md` - Autenticación
-- `dashboard-api.md` - Estadísticas
-- `dueno-api.md` - Gestión de dueños
-- `mascota-api.md` - Gestión de mascotas
-- `vacuna-api.md` - Gestión de vacunas
-- `imagen-mascota-api.md` - Imágenes de mascotas
-- `reporte-api.md` - Exportación de datos
-
-### Endpoints Principales
-
-```
-POST   /api/auth/login              # Login
-POST   /api/auth/register           # Registro
-GET    /api/dashboard/stats         # Estadísticas
-
-GET    /api/duenos                  # Listar dueños
-POST   /api/duenos                  # Crear dueño
-GET    /api/duenos/{id}             # Detalle dueño
-PUT    /api/duenos/{id}             # Actualizar dueño
-DELETE /api/duenos/{id}             # Eliminar dueño
-
-GET    /api/mascotas                # Listar mascotas
-POST   /api/mascotas                # Crear mascota
-GET    /api/mascotas/{id}           # Detalle mascota
-PUT    /api/mascotas/{id}           # Actualizar mascota
-DELETE /api/mascotas/{id}           # Eliminar mascota
-
-GET    /api/vacunas                 # Listar vacunas
-POST   /api/vacunas                 # Crear vacuna
-PUT    /api/vacunas/{id}            # Actualizar vacuna
-DELETE /api/vacunas/{id}            # Eliminar vacuna
-
-GET    /api/reportes/export         # Exportar Excel
-```
-
-## Perfiles de Ejecución
-
+### 4. Ejecutar
 ```bash
 # Desarrollo
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
@@ -277,13 +142,12 @@ GET    /api/reportes/export         # Exportar Excel
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=prod
 ```
 
-Configuraciones en:
-- `application-dev.yml`
-- `application-prod.yml`
+## Docker
+```bash
+docker build -t veterinaria-api .
+docker run -p 8080:8080 veterinaria-api
+```
 
 ---
 
-**Versión**: 1.0.0  
-**Puerto por defecto**: 8080  
-**Base de datos**: PostgreSQL  
-**Estado**: Produccion
+**Estado**: ✅ Producción | **Puerto**: 8080 | **Java**: 17+ | **DB**: PostgreSQL 14+
